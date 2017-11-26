@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './Graph.css'
 import { ForceGraph } from '../../components'
-// import { findDOMNode } from 'react-dom'
 
 class Graph extends Component {
 
@@ -10,8 +9,8 @@ class Graph extends Component {
 
     this.state = {
       dimensions: {
-        height: window.innerHeight,
-        width: window.innerWidth
+        height: document.documentElement.clientHeight,
+        width: document.documentElement.clientWidth
       },
       graph: {
         nodes: [
@@ -73,8 +72,8 @@ class Graph extends Component {
 
   resetDimensions() {
     let updatedDims = Object.assign({}, this.state.dimensions)
-    updatedDims.width = window.innerWidth
-    updatedDims.height = window.innerHeight
+    updatedDims.width = document.documentElement.clientWidth
+    updatedDims.height = document.documentElement.clientHeight
 
     this.setState({
         dimensions: updatedDims

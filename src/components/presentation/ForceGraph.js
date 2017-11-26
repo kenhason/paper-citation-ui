@@ -3,10 +3,14 @@ import React, { Component } from 'react'
 import * as d3 from 'd3'
 import './ForceGraph.css'
 
-class ForceGraph extends Component {
-    
+class ForceGraph extends Component {    
     componentDidMount() {
         this.visualizeGraph()
+    }
+
+    componentWillReceiveProps() {
+        //reForce graph to center of component
+        this.simulation.force('center-force', d3.forceCenter(this.props.dimensions.width/2, this.props.dimensions.height/2))
     }
 
     visualizeGraph() {
@@ -106,9 +110,9 @@ class ForceGraph extends Component {
     
     render() {
         return (
-            <svg    ref={node => this.node = node}
-                    width={this.props.dimensions.width} 
-                    height={this.props.dimensions.height}>
+            <svg ref={node => this.node = node}
+                width={this.props.dimensions.width} 
+                height={this.props.dimensions.height}>
             </svg>
         )
     }
