@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavBar, Graph} from '../../components'
+import { Graph} from '../../components'
 
 class Home extends Component {
   render() {
