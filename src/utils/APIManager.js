@@ -27,5 +27,17 @@ export default {
             }
             callback(null, response.body)
         });
+    },
+    getFile: (url, callback) => {
+        superagent
+        .get(url)
+        .end((err, response) => {
+            if (err) {
+                callback(err, null)
+                return
+            }
+
+            callback(null, response.text)
+        }) 
     }
 }
