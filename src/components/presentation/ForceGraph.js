@@ -1,6 +1,8 @@
+/*global d3*/
+
 // Tutorial: http://www.puzzlr.org/force-graphs-with-d3/
 import React, { Component } from 'react'
-import * as d3 from 'd3'
+// import * as d3 from 'd3'
 import './ForceGraph.css'
 
 class ForceGraph extends Component {    
@@ -8,24 +10,29 @@ class ForceGraph extends Component {
         this.visualizeGraph()
     }
 
-    componentWillReceiveProps() {
+    componentDidUpdate() {
         //reForce graph to center of component
-        this.simulation.force('center-force', d3.forceCenter(this.props.dimensions.width/2, this.props.dimensions.height/2))
+        // this.simulation.force('center-force', d3.forceCenter(this.props.dimensions.width/2, this.props.dimensions.height/2))
+        console.log(this.props.graph)
+        this.visualizeGraph()
     }
 
     visualizeGraph() {
-        this.svg = d3.select(this.node)
-        this.inializeNodesAndLinksInDOM()
-        this.initializeSimulation()
-        this.applySimulationFeatures()
-        this.applyDrag()
+        if (this.props.graph != null) {
+            console.log(this.props.graph)
+            this.svg = d3.select(this.node)
+            this.inializeNodesAndLinksInDOM()
+            this.initializeSimulation()
+            this.applySimulationFeatures()
+            this.applyDrag()
+        }
     }  
 
     initializeSimulation() {
         this.simulation = d3.forceSimulation()
                             .nodes(this.props.graph.nodes)
-                            .force('charge_force', d3.forceManyBody())
-                            .force('center-force', d3.forceCenter(this.props.dimensions.width/2, this.props.dimensions.height/2))
+                            .force('charge', d3.forceManyBody())
+                            .force('center', d3.forceCenter(this.props.dimensions.width/2, this.props.dimensions.height/2))
     }
 
     inializeNodesAndLinksInDOM() {
@@ -55,7 +62,8 @@ class ForceGraph extends Component {
 
         //draw links
         var linkForce = d3.forceLink(this.props.graph.links)
-                            .id(function(d) { return d.name; })
+                            .id(function(d) { return d.id; })
+                            .distance(100).strength(1)
 
         this.simulation.force('links', linkForce)
     }
@@ -99,13 +107,11 @@ class ForceGraph extends Component {
     }  
     
     circleColor(d) {
-        if (d.sex === 'M') return 'blue'
-        else return 'pink'
+        return 'blue'
     }
 
     linkColour(d) {
-        if (d.type === 'E') return 'red'
-        else return 'green'
+        return 'red'
     }
     
     render() {
