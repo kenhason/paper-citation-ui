@@ -2,22 +2,28 @@
 // Tutorial: http://www.puzzlr.org/force-graphs-with-d3/
 import React, { Component } from 'react'
 import './ForceGraph.css'
+import { PaperInfo } from '../'
 
 class ForceGraph extends Component {
     constructor() {
         super() 
-        window.addEventListener('resize', () => {
-            this.svg.attr("width", window.innerWidth).attr("height", window.innerHeight)
-        });
+        window.addEventListener('resize', this.graphResize.bind(this));
+        this.state = {
+            selectedPaper: -1,
+            graphLoaded: false
+        }
     }    
 
     componentDidUpdate() {
-        if (this.props.doneProcessing === true) {
+        if (this.props.doneProcessing && !this.state.graphLoaded) {
             this.visualizeCluster()
         }
     }
 
     visualizeCluster() {
+        this.setState({
+            graphLoaded: true
+        })
         this.width = this.props.dimensions.width
         this.height = this.props.dimensions.height
         this.padding = 1.5 // separation between same-color circles
@@ -41,7 +47,9 @@ class ForceGraph extends Component {
                 r = this.radius(node.cited),
                 d = { cluster: i, 
                       radius: r, 
-                      topic: node.topicLabel ,
+                      topic: node.topicLabel,
+                      title: node.title,
+                      id: node.id,
                       x: Math.cos(i / this.m * 2 * Math.PI) * 200 + this.width / 2 + Math.random(),
                       y: Math.sin(i / this.m * 2 * Math.PI) * 200 + this.height / 2 + Math.random()
                     };
@@ -91,13 +99,22 @@ class ForceGraph extends Component {
         .enter()
         .append("g")
         .attr("class", "node")
-        .on("click", function() {
-            console.log("clicked")
-        })
+        .attr("id", (d) => { return d.id })
+        .on("click", this.updateSelectedPaper.bind(this))
 
         this.circle = this.node.append("circle")
         .attr("r", function(d) { return d.radius; })
         .style("fill", function(d) { return color(d.cluster); })
+    }
+
+    graphResize() {
+        this.svg.attr("width", window.innerWidth).attr("height", window.innerHeight)
+    }
+
+    updateSelectedPaper(event) {
+        this.setState({
+            selectedPaper: event.id
+        })      
     }
     
     // Resolves collisions between d and all other circles.
@@ -183,13 +200,19 @@ class ForceGraph extends Component {
         var t = d3.transform(this.g.attr("transform")).translate;
         this.g.attr("transform", "translate(" + [t[0] + d3.event.dx, t[1] + d3.event.dy] + ")")
     }
+
+    deselectPaper() {
+        this.setState({
+            selectedPaper: -1
+        })
+    }
     
     render() {
+        // if (this.props.doneProcessing) this.visualizeCluster()
         return (
             <div>
-                <div className="keep-center">
-                { this.props.doneProcessing ? null : <i className="fa fa-cog fa-spin fa-3x fa-fw"></i>}
-                </div>
+                { (this.state.selectedPaper === -1) ? null: <PaperInfo onClose={this.deselectPaper.bind(this)}/> }
+                { this.props.doneProcessing ? null : <i className="keep-center fa fa-cog fa-spin fa-3x fa-fw"></i>}
                 <svg ref={node => this.node = node}
                     width={this.props.dimensions.width} 
                     height={this.props.dimensions.height}>
