@@ -6,17 +6,10 @@ import './ForceGraph.css'
 class ForceGraph extends Component {
     constructor() {
         super() 
-        
-        d3.select(window).on('resize', this.updateWindow.bind(this));
+        window.addEventListener('resize', () => {
+            this.svg.attr("width", window.innerWidth).attr("height", window.innerHeight)
+        });
     }    
-
-    updateWindow() {
-        var w = d3.select(window)
-        var x = w.innerWidth;
-        var y = w.innerHeight;
-    
-        d3.select('body').select('svg').attr("width", window.innerWidth).attr("height", window.innerHeight)
-    }
 
     componentDidUpdate() {
         if (this.props.doneProcessing === true) {
@@ -74,16 +67,16 @@ class ForceGraph extends Component {
         var max_zoom = 7;
         var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
 
-        this.svg = d3.select(this.node).append("g")
+        this.svg = d3.select(this.node)
+        this.g = this.svg.append("g")
 
         zoom.on("zoom", function() {
-           this.svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+           this.g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
         }.bind(this));
         
-        d3.select('body').select('svg')
-        .call(drag).call(zoom);
+        this.svg.call(drag).call(zoom);
 
-        this.link = this.svg.selectAll(".link")
+        this.link = this.g.selectAll(".link")
         .data(this.props.graph.links)
         .enter()
         .append("line")
@@ -93,7 +86,7 @@ class ForceGraph extends Component {
         .attr("stroke", "#ccc")
         .attr("class", "link");
 
-        this.node = this.svg.selectAll(".node")
+        this.node = this.g.selectAll(".node")
         .data(this.nodes)
         .enter()
         .append("g")
@@ -187,8 +180,8 @@ class ForceGraph extends Component {
     }
 
     dragged(e) {
-        var t = d3.transform(this.svg.attr("transform")).translate;
-        this.svg.attr("transform", "translate(" + [t[0] + d3.event.dx, t[1] + d3.event.dy] + ")")
+        var t = d3.transform(this.g.attr("transform")).translate;
+        this.g.attr("transform", "translate(" + [t[0] + d3.event.dx, t[1] + d3.event.dy] + ")")
     }
     
     render() {
