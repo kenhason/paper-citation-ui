@@ -3,7 +3,20 @@
 import React, { Component } from 'react'
 import './ForceGraph.css'
 
-class ForceGraph extends Component {    
+class ForceGraph extends Component {
+    constructor() {
+        super() 
+        
+        d3.select(window).on('resize', this.updateWindow.bind(this));
+    }    
+
+    updateWindow() {
+        var w = d3.select(window)
+        var x = w.innerWidth;
+        var y = w.innerHeight;
+    
+        d3.select('body').select('svg').attr("width", window.innerWidth).attr("height", window.innerHeight)
+    }
 
     componentDidUpdate() {
         if (this.props.doneProcessing === true) {
@@ -62,7 +75,7 @@ class ForceGraph extends Component {
         var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
 
         this.svg = d3.select(this.node).append("g")
-        
+
         zoom.on("zoom", function() {
            this.svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
         }.bind(this));
@@ -85,6 +98,9 @@ class ForceGraph extends Component {
         .enter()
         .append("g")
         .attr("class", "node")
+        .on("click", function() {
+            console.log("clicked")
+        })
 
         this.circle = this.node.append("circle")
         .attr("r", function(d) { return d.radius; })
