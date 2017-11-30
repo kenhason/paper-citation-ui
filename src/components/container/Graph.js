@@ -42,7 +42,7 @@ class Graph extends Component {
       'authorization': 'Basic ' + auth
     },
     body =  {
-      "query" : "match path = (p: Paper)-[: CITES]-(: Paper) where id(p) < 650 and id(p) > 600 unwind nodes(path) as n unwind rels(path) as r return {nodes: collect(distinct {id: id(n), title: n.title, cited: n.cited, topics: n.topics}), links: collect(DISTINCT {source: id(startNode(r)), target: id(endNode(r))})}"
+      "query" : "match path = (p: Paper)-[: CITES]-(: Paper) where id(p) < 650 and id(p) > 500 unwind nodes(path) as n unwind rels(path) as r return {nodes: collect(distinct {id: id(n), title: n.title, cited: n.cited, topics: n.topics}), links: collect(DISTINCT {source: id(startNode(r)), target: id(endNode(r))})}"
     };
     
     APIManager.post(url, headers, body, (err, res) => {
@@ -196,7 +196,7 @@ class Graph extends Component {
   assignClusters() {
     var count = 0,
     nodes = Object.assign([], this.state.graph.nodes),
-    distinctSet = new Object();
+    distinctSet = {};
 
     nodes.forEach(function(node) {
       if (!distinctSet.hasOwnProperty(node.topicLabel)) {

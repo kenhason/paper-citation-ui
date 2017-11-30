@@ -47,11 +47,6 @@ class ForceGraph extends Component {
     
         // The largest node for each cluster.
         var clusters = new Array(m);
-        console.log(this.clusters)
-
-        var width = this.props.dimensions.width,
-        height = this.props.dimensions.height;
-        
 
         var nodes = this.props.graph.nodes.map(function(node) {
             var i = node.cluster,
@@ -76,7 +71,32 @@ class ForceGraph extends Component {
                     .on("tick", tick)
                     .start();
         
-        var svg = d3.select(this.node)
+        var drag = d3.behavior.drag()
+        .on("dragstart", dragstarted)
+        .on("drag", dragged)
+
+        var min_zoom = 0.1;
+        var max_zoom = 7;
+        var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
+
+        var svg = d3.select(this.node).append("g")
+        
+        zoom.on("zoom", function() {
+           svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        });
+        
+        d3.select('body').select('svg')
+        .call(drag).call(zoom);
+
+        function dragstarted(d) {
+            d3.event.sourceEvent.stopPropagation();
+            d3.event.sourceEvent.preventDefault;
+          }
+      
+          function dragged(e) {
+            var t = d3.transform(svg.attr("transform")).translate;
+            svg.attr("transform", "translate(" + [t[0] + d3.event.dx, t[1] + d3.event.dy] + ")")
+          }
 
         var link = svg.selectAll(".link")
         .data(this.props.graph.links)
@@ -93,14 +113,14 @@ class ForceGraph extends Component {
         .enter()
         .append("g")
         .attr("class", "node")
-        .call(force.drag)
+        // .call(force.drag)
 
         var circle = node.append("circle")
         .attr("r", function(d) { return d.radius; })
         .style("fill", function(d) { return color(d.cluster); })
   
         function tick(e) {
-            console.log(circle)
+            // console.log(circle)
             circle
             .each(cluster(10 * e.alpha * e.alpha))
             .each(collide(.5))
@@ -280,10 +300,15 @@ class ForceGraph extends Component {
     
     render() {
         return (
-            <svg ref={node => this.node = node}
-                width={this.props.dimensions.width} 
-                height={this.props.dimensions.height}>
-            </svg>
+            <div>
+                <div className="keep-center">
+                { this.props.doneProcessing ? null : <i className="fa fa-cog fa-spin fa-3x fa-fw"></i>}
+                </div>
+                <svg ref={node => this.node = node}
+                    width={this.props.dimensions.width} 
+                    height={this.props.dimensions.height}>
+                </svg>
+            </div>
         )
     }
 }
