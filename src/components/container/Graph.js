@@ -34,24 +34,26 @@ class Graph extends Component {
   }
 
   getResources() {
-    let auth = btoa("neo4j:Neo4j");
-    let url = "http://localhost:7474/db/data/cypher",
-    headers = {
-      'accept': 'application/json',
-      'X-Stream': 'true',
-      'authorization': 'Basic ' + auth
-    },
-    body =  {
-      "query" : "match path = (p: Paper)-[: CITES]-(: Paper) where id(p) < 650 and id(p) > 600 unwind nodes(path) as n unwind rels(path) as r return {nodes: collect(distinct {id: id(n), title: n.title, cited: n.cited, topics: n.topics}), links: collect(DISTINCT {source: id(startNode(r)), target: id(endNode(r))})}"
+    let body =  {
+      "statements": [
+        {
+            "statement": "match path = (p: Paper)-[: CITES]-(: Paper) where id(p) < {maxId} and id(p) > {minId} unwind nodes(path) as n unwind rels(path) as r return {nodes: collect(distinct {id: id(n), title: n.title, cited: n.cited, topics: n.topics}), links: collect(DISTINCT {source: id(startNode(r)), target: id(endNode(r))})}",
+            "parameters": {
+                "minId": 600,
+                "maxId": 650
+            }
+        }
+      ]
     };
     
-    APIManager.post(url, headers, body, (err, res) => {
+    APIManager.queryNeo4j(body, (err, res) => {
       if (err) {
         alert(err)
       }
         
       let updatedGraph = Object.assign({}, this.state.graph)
-      updatedGraph = res.data[0][0]
+      console.log(res)
+      updatedGraph = res.results[0].data[0].row[0]
       this.setState({
         graph: updatedGraph
       })

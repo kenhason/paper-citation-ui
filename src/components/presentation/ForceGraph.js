@@ -2,7 +2,7 @@
 // Tutorial: http://www.puzzlr.org/force-graphs-with-d3/
 import React, { Component } from 'react'
 import './ForceGraph.css'
-import { PaperInfo } from '../'
+import { PaperInfoWindow } from '../'
 
 class ForceGraph extends Component {
     constructor() {
@@ -100,7 +100,7 @@ class ForceGraph extends Component {
         .append("g")
         .attr("class", "node")
         .attr("id", (d) => { return d.id })
-        .on("click", this.updateSelectedPaper.bind(this))
+        .on("click", this.selectPaper.bind(this))
 
         this.circle = this.node.append("circle")
         .attr("r", function(d) { return d.radius; })
@@ -111,61 +111,56 @@ class ForceGraph extends Component {
         this.svg.attr("width", window.innerWidth).attr("height", window.innerHeight)
     }
 
-    updateSelectedPaper(event) {
-        this.setState({
-            selectedPaper: event.id
-        })      
-    }
     
     // Resolves collisions between d and all other circles.
     collide(alpha) {
         var quadtree = d3.geom.quadtree(this.nodes);
         return function(d) {
             var r = d.radius + this.maxRadius + Math.max(this.padding, this.clusterPadding),
-                nx1 = d.x - r,
-                nx2 = d.x + r,
-                ny1 = d.y - r,
-                ny2 = d.y + r;
+            nx1 = d.x - r,
+            nx2 = d.x + r,
+            ny1 = d.y - r,
+            ny2 = d.y + r;
             quadtree.visit(function(quad, x1, y1, x2, y2) {
                 if (quad.point && (quad.point !== d)) {
                     var x = d.x - quad.point.x,
-                        y = d.y - quad.point.y,
-                        l = Math.sqrt(x * x + y * y),
-                        r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? this.padding : this.clusterPadding);
+                    y = d.y - quad.point.y,
+                    l = Math.sqrt(x * x + y * y),
+                    r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? this.padding : this.clusterPadding);
                     if (l < r) {
-                    l = (l - r) / l * alpha;
-                    d.x -= x *= l;
-                    d.y -= y *= l;
-                    quad.point.x += x;
-                    quad.point.y += y;
+                        l = (l - r) / l * alpha;
+                        d.x -= x *= l;
+                        d.y -= y *= l;
+                        quad.point.x += x;
+                        quad.point.y += y;
                     }
                 }
                 return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
             }.bind(this));
         };
     }
-
+    
     cluster(alpha) {
         return function(d) {
             var cluster = this.clusters[d.cluster],
-                k = 1;
-
+            k = 1;
+            
             // For cluster nodes, apply custom gravity.
             if (cluster === d) {
-            cluster = {x: this.width / 2, y: this.height / 2, radius: -d.radius};
-            k = .1 * Math.sqrt(d.radius);
+                cluster = {x: this.width / 2, y: this.height / 2, radius: -d.radius};
+                k = .1 * Math.sqrt(d.radius);
             }
-
+            
             var x = d.x - cluster.x,
-                y = d.y - cluster.y,
-                l = Math.sqrt(x * x + y * y),
-                r = d.radius + cluster.radius;
+            y = d.y - cluster.y,
+            l = Math.sqrt(x * x + y * y),
+            r = d.radius + cluster.radius;
             if (l !== r) {
-            l = (l - r) / l * alpha * k;
-            d.x -= x *= l;
-            d.y -= y *= l;
-            cluster.x += x;
-            cluster.y += y;
+                l = (l - r) / l * alpha * k;
+                d.x -= x *= l;
+                d.y -= y *= l;
+                cluster.x += x;
+                cluster.y += y;
             }
         };
     }
@@ -176,18 +171,18 @@ class ForceGraph extends Component {
         .each(this.collide(.5).bind(this))
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
-
+        
         this.link.attr("x1", function (d) {
-        return d.source.x;
+            return d.source.x;
         })
         this.link.attr("y1", function (d) {
-        return d.source.y;
+            return d.source.y;
         })
         this.link.attr("x2", function (d) {
-        return d.target.x;
+            return d.target.x;
         })
         this.link.attr("y2", function (d) {
-        return d.target.y;
+            return d.target.y;
         });
     }
 
@@ -201,17 +196,22 @@ class ForceGraph extends Component {
         this.g.attr("transform", "translate(" + [t[0] + d3.event.dx, t[1] + d3.event.dy] + ")")
     }
 
+    selectPaper(event) {
+        this.setState({
+            selectedPaper: event.id
+        })      
+    }
+
     deselectPaper() {
         this.setState({
             selectedPaper: -1
         })
     }
-    
+
     render() {
-        // if (this.props.doneProcessing) this.visualizeCluster()
         return (
             <div>
-                { (this.state.selectedPaper === -1) ? null: <PaperInfo onClose={this.deselectPaper.bind(this)}/> }
+                { (this.state.selectedPaper === -1) ? null: <PaperInfoWindow selectedPaper={this.state.selectedPaper} onClose={this.deselectPaper.bind(this)}/> }
                 { this.props.doneProcessing ? null : <i className="keep-center fa fa-cog fa-spin fa-3x fa-fw"></i>}
                 <svg ref={node => this.node = node}
                     width={this.props.dimensions.width} 

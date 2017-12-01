@@ -39,5 +39,25 @@ export default {
 
             callback(null, response.text)
         }) 
+    },
+    queryNeo4j: (body, callback) => {
+        let auth = btoa("neo4j:Neo4j");
+        let url = "http://localhost:7474/db/data/transaction/commit",
+        headers = {
+          'accept': 'application/json',
+          'X-Stream': 'true',
+          'authorization': 'Basic ' + auth
+        }
+        superagent
+        .post(url)
+        .send(body)
+        .set(headers)
+        .end(function(err, response){
+            if (err) {
+                callback(err, null)
+                return
+            }
+            callback(null, response.body)
+        });
     }
 }
