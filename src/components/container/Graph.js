@@ -52,7 +52,6 @@ class Graph extends Component {
       }
         
       let updatedGraph = Object.assign({}, this.state.graph)
-      console.log(res)
       updatedGraph = res.results[0].data[0].row[0]
       this.setState({
         graph: updatedGraph
@@ -218,9 +217,13 @@ class Graph extends Component {
     // console.log(this.state.graph)
   }
 
+  componentDidMount() {
+    console.log(this.refs.graph.getBoundingClientRect().width)
+  }
+
   render() {
     return (
-      <div className='graph-container'>
+      <div className='graph-container' ref="graph">
         <ForceGraph graph={this.state.graph} numOfClusters={this.state.numOfClusters} doneProcessing={this.state.doneProcessing} dimensions={this.state.dimensions}/>
       </div>
     );

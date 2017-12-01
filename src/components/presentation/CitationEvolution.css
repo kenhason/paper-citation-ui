@@ -1,0 +1,21 @@
+.caption {
+    font-style: italic; 
+    font-weight: lighter; 
+    font-size: small;
+}
+
+.column {
+    font: 10px sans-serif;
+    background-color: steelblue;
+    text-align: right;
+    padding: 3px;
+    margin: 0px;
+    color: white;
+    display: inline-block;
+}
+.year-label {
+    font: 10px sans-serif;
+    font-weight: bold;
+    padding: 3px;
+    margin: 0px;
+}
