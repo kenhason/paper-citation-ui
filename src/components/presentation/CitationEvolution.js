@@ -17,6 +17,10 @@ export default class CitationEvolution extends Component {
         }
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.resizeChart);
+    }
+
     resizeChart() {
         var maxNumber = d3.max(this.props.data, function(d) { return d.number; }),
         yearWidth = document.getElementsByClassName("year-label")[0].offsetWidth,
@@ -47,7 +51,7 @@ export default class CitationEvolution extends Component {
         bar.text(function(d) { return d.number; });
         this.resizeChart()
     }
-    
+
     render() {
         return (
             <div>
