@@ -20,6 +20,10 @@ class ForceGraph extends Component {
         }
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.graphResize.bind(this))
+    }
+
     visualizeCluster() {
         this.setState({
             graphLoaded: true
@@ -111,7 +115,6 @@ class ForceGraph extends Component {
         this.svg.attr("width", window.innerWidth).attr("height", window.innerHeight)
     }
 
-    
     // Resolves collisions between d and all other circles.
     collide(alpha) {
         var quadtree = d3.geom.quadtree(this.nodes);

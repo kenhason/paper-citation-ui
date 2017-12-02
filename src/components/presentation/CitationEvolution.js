@@ -7,16 +7,30 @@ export default class CitationEvolution extends Component {
     constructor() {
         super()
         this.drawChart = this.drawChart.bind(this)
+        this.resizeChart = this.resizeChart.bind(this)
     }
 
     componentDidUpdate() {
         if (this.props.data !== null && this.props.data.length > 0 && this.props.modalReady) {
             this.drawChart()
+            window.addEventListener('resize', this.resizeChart);
         }
     }
 
+    resizeChart() {
+        var maxNumber = d3.max(this.props.data, function(d) { return d.number; }),
+        yearWidth = document.getElementsByClassName("year-label")[0].offsetWidth,
+        rowWidth = document.getElementById("citation-evolution-chart").offsetWidth
+
+        var x = d3.scale.linear()
+                    .domain([0, maxNumber])
+                    .range([30, rowWidth - yearWidth]);
+
+        d3.select("#citation-evolution-chart")
+        .selectAll(".column").style("width", function(d) { return x(d.number)+'px'; })
+    }
+
     drawChart() {
-        var maxNumber = d3.max(this.props.data, function(d) { return d.number; });
         var barChart = d3.select("#citation-evolution-chart");
 
         var line = barChart
@@ -30,17 +44,10 @@ export default class CitationEvolution extends Component {
             .text(function(d) { return d.year; });
             
         var bar = line.append("div").attr("class", "column");
-        
-        var yearWidth = document.getElementsByClassName("year-label")[0].offsetWidth,
-        rowWidth = document.getElementById("citation-evolution-chart").offsetWidth
-
-        var x = d3.scale.linear()
-                    .domain([0, maxNumber])
-                    .range([30, rowWidth - yearWidth]);
-
-        bar.style("width", function(d) { return x(d.number)+'px'; })
         bar.text(function(d) { return d.number; });
+        this.resizeChart()
     }
+    
     render() {
         return (
             <div>
