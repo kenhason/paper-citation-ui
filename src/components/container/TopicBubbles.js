@@ -123,15 +123,33 @@ export default class TopicBubbles extends Component {
         .attr("r", function(d) { return d.radius; })
         .style("fill", function(d) { return color(d.cluster); })
 
+        this.node.append("text")
+        .style("text-anchor", "middle")
+        .style("pointer-events", "none")
+        .text(function (d) { return d.topic })
+        .style("font-size", function(d) { return Math.min(2 * d.radius, (2 * d.radius - 8) / this.getComputedTextLength() * 24)/2 + "px"; })
+
+        function getComputedTextLength(text) {
+            if (text == '' || text == null)
+                return 1
+            else {
+                return text.split(" ").length
+            }
+        }
+
         window.addEventListener('resize', this.graphResize.bind(this));
     }
 
     tick(e) {
-        this.circle
+        // this.circle
+        // .each(this.cluster(10 * e.alpha * e.alpha).bind(this))
+        // .each(this.collide(.5).bind(this))
+        // .attr("cx", function(d) { return d.x; })
+        // .attr("cy", function(d) { return d.y; });
+        this.node
         .each(this.cluster(10 * e.alpha * e.alpha).bind(this))
         .each(this.collide(.5).bind(this))
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
+        .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
     }
 
     collide(alpha) {
