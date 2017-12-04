@@ -1,0 +1,14 @@
+.nodes circle {
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+
+.keep-center {
+    position:    absolute;
+    left:        50%;
+    top:         50%;
+    transform: translate(-50%, -50%);
+    transform: -webkit-translate(-50%, -50%);
+    transform: -moz-translate(-50%, -50%);
+    transform: -ms-translate(-50%, -50%);
+  }

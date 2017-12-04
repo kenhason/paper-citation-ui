@@ -52,7 +52,7 @@ class PaperInfo extends Component {
         
         APIManager.queryNeo4j(body, (err, res) => {
             if (err) {
-              alert(err)
+              console.log(err)
             }
 
             let paper = res.results[0].data[0].row[0]
@@ -83,7 +83,7 @@ class PaperInfo extends Component {
         
         APIManager.queryNeo4j(body, (err, res) => {
             if (err) {
-              alert(err)
+              console.log(err)
             }
             let citationEvolution = this.convertToBarChartJSON(res.results[0].data)
             this.setState({

@@ -6,6 +6,8 @@ import ForceGraph from './presentation/ForceGraph'
 import PaperInfoWindow from './container/PaperInfoWindow'
 import PaperDetails from './presentation/PaperDetails'
 import CitationEvolution from './presentation/CitationEvolution'
+import UpdateTopic from './container/UpdateTopic'
+import TopicBubbles from './container/TopicBubbles'
 
 export {
     NavBar,
@@ -15,5 +17,7 @@ export {
     ForceGraph,
     PaperInfoWindow,
     PaperDetails,
-    CitationEvolution
+    CitationEvolution,
+    UpdateTopic,
+    TopicBubbles
 }

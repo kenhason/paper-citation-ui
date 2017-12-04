@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Graph.css'
-import { ForceGraph } from '../../components'
+import { ForceGraph, TopicBubbles} from '../../components'
 import APIManager from '../../utils/APIManager'
 
 class Graph extends Component {
@@ -48,7 +48,8 @@ class Graph extends Component {
     
     APIManager.queryNeo4j(body, (err, res) => {
       if (err) {
-        alert(err)
+        console.log(err)
+        return
       }
         
       let updatedGraph = Object.assign({}, this.state.graph)
@@ -217,14 +218,11 @@ class Graph extends Component {
     // console.log(this.state.graph)
   }
 
-  componentDidMount() {
-    console.log(this.refs.graph.getBoundingClientRect().width)
-  }
-
   render() {
     return (
       <div className='graph-container' ref="graph">
-        <ForceGraph graph={this.state.graph} numOfClusters={this.state.numOfClusters} doneProcessing={this.state.doneProcessing} dimensions={this.state.dimensions}/>
+        <TopicBubbles dimensions={this.state.dimensions}/>
+        {/* <ForceGraph graph={this.state.graph} numOfClusters={this.state.numOfClusters} doneProcessing={this.state.doneProcessing} dimensions={this.state.dimensions}/> */}
       </div>
     );
   }

@@ -1,0 +1,13 @@
+.updateTopicButton {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    border-style: solid;
+    -webkit-box-shadow: 0 0 12px rgb(100, 100, 100);
+    -moz-box-shadow: 0 0 12px rgb(100, 100, 100);
+    box-shadow: 0 0 12px rgb(100, 100, 100);
+}
+
+.hidden-scrolls{
+    overflow: hidden
+}
