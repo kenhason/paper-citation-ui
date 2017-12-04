@@ -124,10 +124,11 @@ export default class TopicBubbles extends Component {
         .style("fill", function(d) { return color(d.cluster); })
 
         this.node.append("text")
+        .attr("dy", ".3em")
         .style("text-anchor", "middle")
         .style("pointer-events", "none")
-        .text(function (d) { return d.topic })
-        .style("font-size", function(d) { return Math.min(2 * d.radius, (2 * d.radius - 8) / this.getComputedTextLength() * 24)/2 + "px"; })
+        .text(function (d) { return d.topic; })
+        .style("font-size", function(d) { return Math.min(2 * d.radius, (2 * d.radius - 8)/this.getComputedTextLength() * 24)/1.5 + "px"; })
 
         function getComputedTextLength(text) {
             if (text == '' || text == null)
