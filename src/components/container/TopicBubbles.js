@@ -6,7 +6,6 @@ import './TopicBubbles.css'
 export default class TopicBubbles extends Component {
     constructor() {
         super()
-        window.addEventListener('resize', this.graphResize.bind(this));
         this.getData()
         this.state = {
             topics: [],
@@ -26,7 +25,8 @@ export default class TopicBubbles extends Component {
     }
 
     graphResize() {
-        this.svg.attr("width", window.innerWidth).attr("height", window.innerHeight)
+        if (this.svg !== null)
+            this.svg.attr("width", window.innerWidth).attr("height", window.innerHeight)
     }
 
     getData() {
@@ -52,7 +52,6 @@ export default class TopicBubbles extends Component {
                 doneProcessing: true
             })
             this.visualizeCluster()
-            // console.log(this.state.topics)
         })
     }
 
@@ -123,6 +122,8 @@ export default class TopicBubbles extends Component {
         this.circle = this.node.append("circle")
         .attr("r", function(d) { return d.radius; })
         .style("fill", function(d) { return color(d.cluster); })
+
+        window.addEventListener('resize', this.graphResize.bind(this));
     }
 
     tick(e) {

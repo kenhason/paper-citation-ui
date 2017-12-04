@@ -7,7 +7,6 @@ import { PaperInfoWindow } from '../'
 class ForceGraph extends Component {
     constructor() {
         super() 
-        window.addEventListener('resize', this.graphResize.bind(this));
         this.state = {
             selectedPaper: -1,
             graphLoaded: false
@@ -109,9 +108,12 @@ class ForceGraph extends Component {
         this.circle = this.node.append("circle")
         .attr("r", function(d) { return d.radius; })
         .style("fill", function(d) { return color(d.cluster); })
+
+        window.addEventListener('resize', this.graphResize.bind(this));
     }
 
     graphResize() {
+        if (this.svg !== null)
         this.svg.attr("width", window.innerWidth).attr("height", window.innerHeight)
     }
 

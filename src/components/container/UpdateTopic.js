@@ -202,9 +202,13 @@ export default class UpdateTopic extends Component {
 
     componentDidMount() {
         $('#updateTopicModal').on('hide.bs.modal', function (e) {
-            this.props.onClose()
+            this.stopLabelUpdate()
         }.bind(this))
 
+        $('#updateTopicModal').on('hidden.bs.modal', function (e) {
+            this.props.onClose()
+        }.bind(this))
+        
         $('#updateTopicModal').modal('show')  
     }
 
