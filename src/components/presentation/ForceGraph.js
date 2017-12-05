@@ -10,7 +10,7 @@ class ForceGraph extends Component {
         super() 
         this.state = {
             defaultCapacity: 100,
-            graph: {},
+            nodes: [],
             selectedPaper: -1,
             dataReady: false
         }
@@ -25,7 +25,7 @@ class ForceGraph extends Component {
         let body = {
             "statements": [
                 {
-                    "statement": "match path = (p: Paper)-[: CITES]-(: Paper) where id(p) < 1000 and p.topicLabel={topic} unwind nodes(path) as n unwind rels(path) as r return {nodes: collect(distinct {id: id(n), title: n.title, cited: n.cited, topics: n.topics}), links: collect(DISTINCT {source: id(startNode(r)), target: id(endNode(r))})}",
+                    "statement": "match (n: Paper) where n.topicLabel={topic} and n.cited > 0 return {id: id(n), title: n.title, cited: n.cited} order by n.cited desc limit 100",
                     "parameters": {
                         "topic": this.props.selectedTopic
                     }
@@ -38,77 +38,152 @@ class ForceGraph extends Component {
                 console.log(err)
                 return
             }
-            console.log(res)
+            let nodes = res.results[0].data.map(function(data) { return data.row[0] })
+            // console.log(nodes)
             this.setState({
-                graph: this.transformLinkId(res.results[0].data[0].row[0]),
+                nodes: nodes,
                 dataReady: true
             })
-            this.visualizeCluster()
-            console.log(this.state.graph)
+            this.visualize()
+            // console.log(this.state.nodes)
         })
     }
 
-    transformLinkId(graph) {
-        var nodeTable = {};
-        graph.nodes.forEach(function(node, i) {
-          nodeTable[node.id] = i
-        })
-        graph.links.forEach(function(link) {
-          link.source = nodeTable[link.source]
-          link.target = nodeTable[link.target]
-        })
-        return graph
-    }
+    visualize() {
+        var width = 960,
+            height = 500,
+            padding = 1.5, // separation between same-color nodes
+            clusterPadding = 6, // separation between different-color nodes
+            minRadius = 5,
+            maxRadius = 100;
 
-    visualizeCluster() {
-        var graph = Object.assign({}, this.state.graph)
-        var svg = d3.select(this.node).append("g")
-        d3.layout.force()
-        .nodes(graph.nodes)
-        .linkDistance(20)
-        .linkStrength(1)
-        .links(graph.links)
-        .size([window.innerWidth, window.innerHeight])
-        .on("tick", tick)
-        .start();
-    
-        var link = svg.selectAll(".link")
-                        .data(graph.links)
-                        .enter().append("line")
-                        .attr("class", "link");
-        
-        var node = svg.selectAll(".node")
-                        .data(graph.nodes)
-                        .enter().append("circle")
-                        .attr("class", "node")
-                        .attr("r", 4.5);
+        var m = this.state.nodes.length; // number of distinct clusters
 
-        function tick() {
-            link.attr("x1", function(d) { return d.source.x; })
-                .attr("y1", function(d) { return d.source.y; })
-                .attr("x2", function(d) { return d.target.x; })
-                .attr("y2", function(d) { return d.target.y; });
-            
-            node.attr("cx", function(d) { return d.x; })
-                .attr("cy", function(d) { return d.y; });
+        var color = d3.scale.category10()
+            .domain(d3.range(m));
+
+        var radius = d3.scale.linear().range([minRadius, maxRadius])
+            .domain([0, d3.max(this.state.nodes, function(d) { return d.cited; })]);
+
+        // The largest node for each cluster.
+        var clusters = new Array(m);
+
+        var nodes = this.state.nodes.map(function (node) {
+            var i = node.id,
+                r = radius(node.cited),
+                d = {
+                    cluster: i,
+                    radius: r,
+                    x: Math.cos(i / m * 2 * Math.PI) * 200 + width / 2 + Math.random(),
+                    y: Math.sin(i / m * 2 * Math.PI) * 200 + height / 2 + Math.random()
+                };
+            if (!clusters[i] || (r > clusters[i].radius)) clusters[i] = d;
+            return d;
+        });
+
+        var force = d3.layout.force()
+            .nodes(nodes)
+            .size([width, height])
+            .gravity(0.02)
+            .charge(0)
+            .on("tick", tick)
+            .start();
+
+        var drag = d3.behavior.drag()
+        .on("dragstart", dragstarted)
+        .on("drag", dragged)
+
+        var min_zoom = 0.1;
+        var max_zoom = 7;
+        var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
+
+        var svg = d3.select(this.node)
+        var g = svg.append("g")
+
+        zoom.on("zoom", function() {
+            g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        });
+         
+        svg.call(drag).call(zoom);
+
+        var node = g.selectAll("circle")
+            .data(nodes)
+            .enter().append("circle")
+            .style("fill", function (d) { return color(d.cluster); })
+            .call(force.drag);
+
+        node.transition()
+            .duration(750)
+            .delay(function (d, i) { return i * 5; })
+            .attrTween("r", function (d) {
+                var i = d3.interpolate(0, d.radius);
+                return function (t) { return d.radius = i(t); };
+            });
+
+        function tick(e) {
+            node
+                .each(cluster(10 * e.alpha * e.alpha))
+                .each(collide(.5))
+                .attr("cx", function (d) { return d.x; })
+                .attr("cy", function (d) { return d.y; });
         }
-    }
 
-    tick(e) {
-        this.node
-        .each(this.cluster(10 * e.alpha * e.alpha).bind(this))
-        .each(this.collide(.5).bind(this))
-        .attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
-    }
+        // Move d to be adjacent to the cluster node.
+        function cluster(alpha) {
+            return function (d) {
+                var cluster = clusters[d.cluster];
+                if (cluster === d) return;
+                var x = d.x - cluster.x,
+                    y = d.y - cluster.y,
+                    l = Math.sqrt(x * x + y * y),
+                    r = d.radius + cluster.radius;
+                if (l !== r) {
+                    l = (l - r) / l * alpha;
+                    d.x -= x *= l;
+                    d.y -= y *= l;
+                    cluster.x += x;
+                    cluster.y += y;
+                }
+            };
+        }
 
-    dragstarted(d) {
-        d3.event.sourceEvent.stopPropagation();
-        d3.event.sourceEvent.preventDefault();
-    }
+        // Resolves collisions between d and all other circles.
+        function collide(alpha) {
+            var quadtree = d3.geom.quadtree(nodes);
+            return function (d) {
+                var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
+                    nx1 = d.x - r,
+                    nx2 = d.x + r,
+                    ny1 = d.y - r,
+                    ny2 = d.y + r;
+                quadtree.visit(function (quad, x1, y1, x2, y2) {
+                    if (quad.point && (quad.point !== d)) {
+                        var x = d.x - quad.point.x,
+                            y = d.y - quad.point.y,
+                            l = Math.sqrt(x * x + y * y),
+                            r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? padding : clusterPadding);
+                        if (l < r) {
+                            l = (l - r) / l * alpha;
+                            d.x -= x *= l;
+                            d.y -= y *= l;
+                            quad.point.x += x;
+                            quad.point.y += y;
+                        }
+                    }
+                    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+                });
+            };
+        }
 
-    dragged(e) {
-        var t = d3.transform(this.g.attr("transform")).translate;
-        this.g.attr("transform", "translate(" + [t[0] + d3.event.dx, t[1] + d3.event.dy] + ")")
+        function dragstarted(d) {
+            d3.event.sourceEvent.stopPropagation();
+            d3.event.sourceEvent.preventDefault();
+        }
+    
+        function dragged(e) {
+            var t = d3.transform(g.attr("transform")).translate;
+            g.attr("transform", "translate(" + [t[0] + d3.event.dx, t[1] + d3.event.dy] + ")")
+        }
     }
 
     selectPaper(event) {
