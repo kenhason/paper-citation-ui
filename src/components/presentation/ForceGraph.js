@@ -49,6 +49,11 @@ class ForceGraph extends Component {
         })
     }
 
+    graphResize() {
+        if (this.svg !== null)
+            this.svg.attr("width", window.innerWidth).attr("height", window.innerHeight)
+    }
+
     visualize() {
         this.width = window.innerWidth
         this.height = window.innerHeight
@@ -72,7 +77,7 @@ class ForceGraph extends Component {
                 d = { cluster: i, 
                       radius: r, 
                       title: node.title,
-                      id: i
+                      id: node.id
                     };
             if (!this.clusters[i] || (r > this.clusters[i].radius)) this.clusters[i] = d;
             return d;
@@ -120,10 +125,17 @@ class ForceGraph extends Component {
         .attr("dy", ".3em")
         .style("text-anchor", "middle")
         .style("pointer-events", "none")
-        .text(function (d) { return d.title; })
+        .text(function (d) { 
+            let shorted = ''
+            d.title.split(" ").forEach(function(word, i) {
+                if (i < 2)
+                    shorted += word + " "
+            })
+            return shorted + "..."; 
+        })
         .style("font-size", function(d) { return Math.min(2 * d.radius, (2 * d.radius - 8)/this.getComputedTextLength() * 24)/1.5 + "px"; })
 
-        // window.addEventListener('resize', this.graphResize.bind(this));
+        window.addEventListener('resize', this.graphResize.bind(this));
     }
 
     tick(e) {
