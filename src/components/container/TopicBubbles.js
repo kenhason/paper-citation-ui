@@ -115,9 +115,9 @@ export default class TopicBubbles extends Component {
         .data(this.nodes)
         .enter()
         .append("g")
-        .attr("class", "node")
+        .attr("class", "bubbles")
         .attr("id", (d) => { return d.id })
-        // .on("click", this.selectPaper.bind(this))
+        .on("click", this.selectTopic.bind(this))
 
         this.circle = this.node.append("circle")
         .attr("r", function(d) { return d.radius; })
@@ -130,23 +130,10 @@ export default class TopicBubbles extends Component {
         .text(function (d) { return d.topic; })
         .style("font-size", function(d) { return Math.min(2 * d.radius, (2 * d.radius - 8)/this.getComputedTextLength() * 24)/1.5 + "px"; })
 
-        function getComputedTextLength(text) {
-            if (text == '' || text == null)
-                return 1
-            else {
-                return text.split(" ").length
-            }
-        }
-
         window.addEventListener('resize', this.graphResize.bind(this));
     }
 
     tick(e) {
-        // this.circle
-        // .each(this.cluster(10 * e.alpha * e.alpha).bind(this))
-        // .each(this.collide(.5).bind(this))
-        // .attr("cx", function(d) { return d.x; })
-        // .attr("cy", function(d) { return d.y; });
         this.node
         .each(this.cluster(10 * e.alpha * e.alpha).bind(this))
         .each(this.collide(.5).bind(this))
@@ -215,6 +202,11 @@ export default class TopicBubbles extends Component {
         this.g.attr("transform", "translate(" + [t[0] + d3.event.dx, t[1] + d3.event.dy] + ")")
     }
 
+    selectTopic(event) {
+        this.force.on('tick', null)
+        this.props.onTopicSelected(event.topic)
+        console.log(event.topic)
+    }
 
     render() {
         return(

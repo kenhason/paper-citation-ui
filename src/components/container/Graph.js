@@ -19,7 +19,8 @@ class Graph extends Component {
       topicLabels2: [],
       topicLabels3: [],
       topicLabels4: [],
-      doneProcessing: false
+      doneProcessing: false,
+      selectedTopic: ''
     }
 
     this.transformLinkId = this.transformLinkId.bind(this)
@@ -218,11 +219,25 @@ class Graph extends Component {
     // console.log(this.state.graph)
   }
 
+  selectTopic(topic) {
+    this.setState({
+      selectedTopic: topic
+    })
+  }
+
+  backToTopicBubbles() {
+    this.setState({
+      selectedTopic: ''
+    })
+  }
+
   render() {
     return (
       <div className='graph-container' ref="graph">
-        <TopicBubbles dimensions={this.state.dimensions}/>
-        {/* <ForceGraph graph={this.state.graph} numOfClusters={this.state.numOfClusters} doneProcessing={this.state.doneProcessing} dimensions={this.state.dimensions}/> */}
+        {(this.state.selectedTopic === '') 
+          ? <TopicBubbles dimensions={this.state.dimensions} onTopicSelected={this.selectTopic.bind(this)}/> 
+          : <ForceGraph selectedTopic={this.state.selectedTopic} onClose={this.backToTopicBubbles.bind(this)} graph={this.state.graph} numOfClusters={this.state.numOfClusters} doneProcessing={this.state.doneProcessing} dimensions={this.state.dimensions}/>
+        }   
       </div>
     );
   }
