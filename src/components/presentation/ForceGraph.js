@@ -3,69 +3,45 @@
 import React, { Component } from 'react'
 import './ForceGraph.css'
 import { PaperInfoWindow } from '../'
-import APIManager from '../../utils/APIManager'
 
 class ForceGraph extends Component {
     constructor() {
         super() 
         this.state = {
-            defaultCapacity: 100,
-            nodes: [],
             selectedPaper: -1,
-            dataReady: false
+            doneVisualized: false
         }
-
     }    
 
     componentDidMount() {
-        this.getData() 
+        if (this.props.papers.length > 0 && this.state.doneVisualized === false)
+            this.visualize()
     }
 
-    getData() {
-        let body = {
-            "statements": [
-                {
-                    "statement": "match (n: Paper) where n.topicLabel={topic} and n.cited > 0 return {id: id(n), title: n.title, cited: n.cited} order by n.cited desc limit 100",
-                    "parameters": {
-                        "topic": this.props.selectedTopic
-                    }
-                }
-            ]
-        };
-
-        APIManager.queryNeo4j(body, (err, res) => {
-            if (err) {
-                console.log(err)
-                return
-            }
-            let nodes = res.results[0].data.map(function(data) { return data.row[0] })
-            this.setState({
-                nodes: nodes,
-                dataReady: true
-            })
+    componentDidUpdate() {
+        if (this.props.papers.length > 0 && this.state.doneVisualized === false)
             this.visualize()
-        })
     }
 
     visualize() {
-        
+        console.log("visualizing papers ...")
         var width = window.innerWidth,
         height = window.innerHeight,
         padding = 1.5, // separation between same-color circles
         clusterPadding = 20, // separation between different-color circles
         maxRadius = 100,
         minRadius = 35,
-        m = this.state.nodes.length 
+        m = this.props.papers.length 
         
         var color = d3.scale.category20().domain(d3.range(m));
   
         var radius = d3.scale.linear().range([minRadius, maxRadius])
-                        .domain([0, d3.max(this.state.nodes, function(d) { return d.cited; })]);
+                        .domain([0, d3.max(this.props.papers, function(d) { return d.cited; })]);
     
         // The largest node for each cluster.
         var clusters = new Array(m);
         // console.log(this.state.m)
-        var nodes = this.state.nodes.map(function(node, i) {
+        var nodes = this.props.papers.map(function(node, i) {
             var r = radius(node.cited),
                 d = { cluster: i, 
                       radius: r, 
@@ -92,7 +68,7 @@ class ForceGraph extends Component {
         var max_zoom = 7;
         var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
 
-        var svg = d3.select(this.node),
+        var svg = d3.select(this.refs.papers),
         g = svg.append("g")
 
         zoom.on("zoom", function() {
@@ -131,6 +107,10 @@ class ForceGraph extends Component {
             svg.attr("width", window.innerWidth).attr("height", window.innerHeight)
         });
         
+        this.setState({
+            doneVisualized: true
+        })
+
         function tick(e) {
             node
             .each(cluster(10 * e.alpha * e.alpha))
@@ -224,8 +204,8 @@ class ForceGraph extends Component {
                     Back
                 </button>
                 { (this.state.selectedPaper === -1) ? null: <PaperInfoWindow selectedPaper={this.state.selectedPaper} onClose={this.deselectPaper.bind(this)}/> }
-                { this.state.dataReady ? null : <i className="keep-center fa fa-cog fa-spin fa-3x fa-fw"></i>}
-                <svg ref={node => this.node = node}
+                { (this.props.papers.length > 0) ? null : <i className="keep-center fa fa-cog fa-spin fa-3x fa-fw"></i>}
+                <svg ref="papers"
                     width={window.innerWidth} 
                     height={window.innerHeight}>
                 </svg>

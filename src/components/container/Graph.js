@@ -22,13 +22,15 @@ class Graph extends Component {
       topicLabels3: [],
       topicLabels4: [],
       doneProcessing: false,
-      selectedTopic: ''
+      selectedTopic: '',
+      numOfTopPapers: 100
     }
 
     this.getTopicsData()
   }
 
   getTopicsData() {
+    console.log("getting topics ...")
     let body = {
       "statements": [
         {
@@ -53,12 +55,14 @@ class Graph extends Component {
   }
 
   getPapersData() {
+    console.log("getting papers ...")
     let body = {
       "statements": [
         {
-          "statement": "match (n: Paper) where n.topicLabel={topic} and n.cited > 0 return {id: id(n), title: n.title, cited: n.cited} order by n.cited desc limit 100",
+          "statement": "match (n: Paper) where n.topicLabel={topic} and n.cited > 0 return {id: id(n), title: n.title, cited: n.cited} order by n.cited desc limit {topSize}",
           "parameters": {
-            "topic": this.state.selectedTopic
+            "topic": this.state.selectedTopic,
+            "topSize": this.state.numOfTopPapers
           }
         }
       ]
@@ -78,6 +82,7 @@ class Graph extends Component {
 
   selectTopic(topic) {
     this.setState({
+      papers: [],
       selectedTopic: topic
     })
     this.getPapersData()
@@ -93,8 +98,8 @@ class Graph extends Component {
     return (
       <div className='graph-container' ref="graph">
         {(this.state.selectedTopic === '') 
-          ? <TopicBubbles dimensions={this.state.dimensions} onTopicSelected={this.selectTopic.bind(this)}/> 
-          : <ForceGraph selectedTopic={this.state.selectedTopic} onClose={this.backToTopicBubbles.bind(this)} graph={this.state.graph} numOfClusters={this.state.numOfClusters} doneProcessing={this.state.doneProcessing} dimensions={this.state.dimensions}/>
+          ? <TopicBubbles topics={this.state.topics} onTopicSelected={this.selectTopic.bind(this)}/> 
+          : <ForceGraph papers={this.state.papers}  selectedTopic={this.state.selectedTopic} onClose={this.backToTopicBubbles.bind(this)} graph={this.state.graph} numOfClusters={this.state.numOfClusters} doneProcessing={this.state.doneProcessing} dimensions={this.state.dimensions}/>
         }   
       </div>
     );

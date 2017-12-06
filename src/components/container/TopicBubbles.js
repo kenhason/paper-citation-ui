@@ -1,63 +1,44 @@
 /*global d3*/
 import React, { Component } from 'react'
-import APIManager from '../../utils/APIManager'
 import './TopicBubbles.css'
 
 export default class TopicBubbles extends Component {
     constructor() {
         super()
-        this.getData()
         this.state = {
-            topics: [],
-            sample: '',
-            doneProcessing: false
+            doneVisualized: false
         }
     }
 
-    getData() {
-        let body =  {
-            "statements": [
-                {
-                    "statement": "match (n: Paper) where EXISTS(n.topicLabel) return distinct(n.topicLabel), count(*)"
-                }
-            ]
-          };
-        APIManager.queryNeo4j(body, (err, res) => {
-            if (err) {
-                console.log(err)
-                return
-            }
-            // console.log(res)
-            let results = []
-            res.results[0].data.forEach((data) => {
-                results.push({topic: data.row[0], size: data.row[1]})
-            })
-            this.setState({
-                topics: results,
-                doneProcessing: true
-            })
+    componentDidMount() {
+        if (this.props.topics.length > 0 && this.state.doneVisualized === false)
             this.visualizeCluster()
-        })
+    }
+
+    componentDidUpdate() {
+        if (this.props.topics.length > 0 && this.state.doneVisualized === false)
+            this.visualizeCluster()
     }
 
     visualizeCluster() {
-        var width = this.props.dimensions.width,
-            height = this.props.dimensions.height,
-        padding = 1.5, // separation between same-color circles
-        clusterPadding = 20, // separation between different-color circles
-        maxRadius = 100,
-        minRadius = 35,
-        m = this.state.topics.length // number of distinct clusters
+        console.log("visualizing topics ...")
+        var width = window.innerWidth,
+            height = window.innerHeight,
+            padding = 1.5, // separation between same-color circles
+            clusterPadding = 20, // separation between different-color circles
+            maxRadius = 100,
+            minRadius = 35,
+            m = this.props.topics.length // number of distinct clusters
         
         var color = d3.scale.category20().domain(d3.range(m));
   
         var radius = d3.scale.linear().range([minRadius, maxRadius])
-                        .domain([0, d3.max(this.state.topics, function(d) { return d.size; })]);
+                        .domain([0, d3.max(this.props.topics, function(d) { return d.size; })]);
     
         // The largest node for each cluster.
         var clusters = new Array(m);
         // console.log(this.state.m)
-        var nodes = this.state.topics.map(function(topic, i) {
+        var nodes = this.props.topics.map(function(topic, i) {
             var r = radius(topic.size),
                 d = { cluster: i, 
                       radius: r, 
@@ -116,6 +97,10 @@ export default class TopicBubbles extends Component {
         window.addEventListener('resize', function() {
             svg.attr("width", window.innerWidth).attr("height", window.innerHeight)
         });
+
+        this.setState({
+            doneVisualized: true
+        })
         
         function tick(e) {
             node
@@ -195,7 +180,7 @@ export default class TopicBubbles extends Component {
         return(
             <div>
                 {/* <i className="keep-center fa fa-cog fa-spin fa-3x fa-fw"></i> */}
-                { this.state.doneProcessing ? null : <i className="keep-center fa fa-cog fa-spin fa-3x fa-fw"></i>}
+                { (this.props.topics.length > 0) ? null : <i className="keep-center fa fa-cog fa-spin fa-3x fa-fw"></i>}
                 <svg ref={node => this.node = node}
                     width={window.innerWidth} 
                     height={window.innerHeight}>
