@@ -81,7 +81,7 @@ class ForceGraph extends Component {
         .data(nodes)
         .enter()
         .append("g")
-        .attr("class", "bubbles")
+        .attr("class", "node")
         .attr("id", (d) => { return d.id })
         .on("click", this.selectPaper.bind(this))
 
@@ -200,9 +200,10 @@ class ForceGraph extends Component {
     render() {
         return (
             <div>
-                <button onClick={this.backToTopicBubbles.bind(this)} type="button" className="graph-back-button btn btn-primary">
+                {/* <button onClick={this.backToTopicBubbles.bind(this)} type="button" className="graph-back-button btn btn-primary">
                     Back
-                </button>
+                </button> */}
+                <a className="graph-back-button text-center"><i onClick={this.backToTopicBubbles.bind(this)} className="fa fa-3x fa-arrow-left text-muted" aria-hidden="true"></i></a>
                 { (this.state.selectedPaper === -1) ? null: <PaperInfoWindow selectedPaper={this.state.selectedPaper} onClose={this.deselectPaper.bind(this)}/> }
                 { (this.props.papers.length > 0) ? null : <i className="keep-center fa fa-cog fa-spin fa-3x fa-fw"></i>}
                 <svg ref="papers"
