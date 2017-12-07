@@ -16,6 +16,7 @@ class Graph extends Component {
       graph: null,
       topics: [],
       papers: [],
+      topicEvolution: [],
       numOfClusters: 0,
       topicLabels1: [],
       topicLabels2: [],
@@ -80,12 +81,38 @@ class Graph extends Component {
     })
   }
 
+  getTopicEvolution() {
+    console.log("getting topic evolution ...")
+    let body = {
+      "statements": [
+        {
+          "statement": "match (o: Paper) where o.topicLabel={topic} and o.year>0 return o.year as year, count(o.year) as number ORDER BY year ASC",
+          "parameters": {
+            "topic": this.state.selectedTopic
+          }
+        }
+      ]
+    };
+
+    APIManager.queryNeo4j(body, (err, res) => {
+      if (err) {
+        console.log(err)
+        return
+      }
+      let data = res.results[0].data.map(function (data) { return {year: data.row[0], number: data.row[1]} })
+      this.setState({
+        topicEvolution: data
+      })
+    })
+  }
+
   selectTopic(topic) {
     this.setState({
       papers: [],
       selectedTopic: topic
     })
     this.getPapersData()
+    this.getTopicEvolution()
   }
 
   backToTopicBubbles() {
@@ -99,7 +126,7 @@ class Graph extends Component {
       <div className='graph-container' ref="graph">
         {(this.state.selectedTopic === '') 
           ? <TopicBubbles topics={this.state.topics} onTopicSelected={this.selectTopic.bind(this)}/> 
-          : <ForceGraph papers={this.state.papers}  selectedTopic={this.state.selectedTopic} onClose={this.backToTopicBubbles.bind(this)} graph={this.state.graph} numOfClusters={this.state.numOfClusters} doneProcessing={this.state.doneProcessing} dimensions={this.state.dimensions}/>
+          : <ForceGraph topicEvolution={this.state.topicEvolution} papers={this.state.papers}  selectedTopic={this.state.selectedTopic} onClose={this.backToTopicBubbles.bind(this)} graph={this.state.graph} numOfClusters={this.state.numOfClusters} doneProcessing={this.state.doneProcessing} dimensions={this.state.dimensions}/>
         }   
       </div>
     );

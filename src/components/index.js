@@ -8,6 +8,7 @@ import PaperDetails from './presentation/PaperDetails'
 import CitationEvolution from './presentation/CitationEvolution'
 import UpdateTopic from './container/UpdateTopic'
 import TopicBubbles from './container/TopicBubbles'
+import TopicEvolution from './presentation/TopicEvolution'
 
 export {
     NavBar,
@@ -19,5 +20,6 @@ export {
     PaperDetails,
     CitationEvolution,
     UpdateTopic,
-    TopicBubbles
+    TopicBubbles,
+    TopicEvolution
 }

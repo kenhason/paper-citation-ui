@@ -2,14 +2,15 @@
 // Tutorial: http://www.puzzlr.org/force-graphs-with-d3/
 import React, { Component } from 'react'
 import './ForceGraph.css'
-import { PaperInfoWindow } from '../'
+import { PaperInfoWindow, TopicEvolution } from '../'
 
 class ForceGraph extends Component {
     constructor() {
         super() 
         this.state = {
             selectedPaper: -1,
-            doneVisualized: false
+            doneVisualized: false,
+            topicEvolution: false
         }
     }    
 
@@ -197,6 +198,18 @@ class ForceGraph extends Component {
         this.props.onClose()
     }
 
+    closeTopicEvolution() {
+        this.setState({
+            topicEvolution: false
+        })
+    }
+
+    openTopicEvolution() {
+        this.setState({
+            topicEvolution: true
+        })
+    }
+
     render() {
         return (
             <div>
@@ -204,8 +217,10 @@ class ForceGraph extends Component {
                     Back
                 </button> */}
                 <a className="graph-back-button text-center"><i onClick={this.backToTopicBubbles.bind(this)} className="fa fa-3x fa-arrow-left text-muted" aria-hidden="true"></i></a>
+                <button onClick={this.openTopicEvolution.bind(this)} type="button" className="topic-evolution-button btn btn-success">Topic Evolution</button>
                 { (this.state.selectedPaper === -1) ? null: <PaperInfoWindow selectedPaper={this.state.selectedPaper} onClose={this.deselectPaper.bind(this)}/> }
                 { (this.props.papers.length > 0) ? null : <i className="keep-center fa fa-cog fa-spin fa-3x fa-fw"></i>}
+                { this.state.topicEvolution ? <TopicEvolution topic={this.props.selectedTopic} chartData={this.props.topicEvolution} onClose={this.closeTopicEvolution.bind(this)}/> : null }
                 <svg ref="papers"
                     width={window.innerWidth} 
                     height={window.innerHeight}>
