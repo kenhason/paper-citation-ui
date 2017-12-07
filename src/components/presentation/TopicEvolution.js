@@ -115,6 +115,10 @@ export default class TopicEvolution extends Component {
         svg.append("g")
             .attr("class", "y axis")
             .call(yAxis)
+            .append("text")
+            .attr("dy", "-0.71em")
+            .attr("text-anchor", "end")
+            .text("# of papers");
     }
 
     render() {
