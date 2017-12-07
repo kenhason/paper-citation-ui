@@ -1,5 +1,6 @@
 /*global d3 $*/
 import React, { Component } from 'react'
+import './TopicEvolution.css'
 
 export default class TopicEvolution extends Component {
     constructor() {
@@ -24,7 +25,7 @@ export default class TopicEvolution extends Component {
 
     componentDidUpdate() {
         if (this.props.chartData.length > 0 && this.state.modalReady === true)
-            this.drawChart() 
+            this.drawLineChart() 
     }
 
     drawChart() {
@@ -44,8 +45,8 @@ export default class TopicEvolution extends Component {
         bar.text(function(d) { return d.number; });
         window.addEventListener('resize', this.resizeChart.bind(this));
         this.resizeChart()
-
     }
+
     resizeChart() {
         var maxNumber = d3.max(this.props.chartData, function(d) { return d.number; }),
         yearWidth = document.getElementsByClassName("year-label")[0].offsetWidth,
@@ -57,6 +58,62 @@ export default class TopicEvolution extends Component {
 
         d3.select("#topic-evolution-chart")
         .selectAll(".column").style("width", function(d) { return x(d.number)+'px'; })
+    }
+
+    drawLineChart() {
+        d3.select(this.refs.chart).selectAll("*").remove()
+
+        var margin = { top: 30, right: 100, bottom: 30, left: 100 },
+            width = this.refs.topicChart.clientWidth - margin.left - margin.right,
+            height = 0.5*this.refs.topicChart.clientWidth - margin.top - margin.bottom;
+
+        // Set the ranges
+        var x = d3.scale.linear().range([0, width]);
+        var y = d3.scale.linear().range([height, 0]);
+
+        // Define the axes
+        var xAxis = d3.svg.axis().scale(x)
+            .ticks(5)
+            .orient("bottom")
+            .tickFormat(d3.format('.0f'))
+
+        var yAxis = d3.svg.axis().scale(y)
+            .orient("left");
+
+        // Define the line
+        var valueline = d3.svg.line()
+            .x(function (d) { return x(d.year); })
+            .y(function (d) { return y(d.number); });
+
+        // Adds the svg canvas
+        var svg = d3.select(this.refs.chart)
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+        var data = Object.assign([], this.props.chartData)
+
+        // Scale the range of the data
+        x.domain(d3.extent(data, function (d) { return d.year; }));
+        y.domain([0, d3.max(data, function (d) { return d.number; })]);
+
+        // Add the valueline path.
+        svg.append("path")
+            .attr("class", "line")
+            .attr("d", valueline(data));
+
+        // Add the X Axis
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        // Add the Y Axis
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
     }
 
     render() {
@@ -73,6 +130,9 @@ export default class TopicEvolution extends Component {
                         <div className="modal-body">
                             {(this.props.chartData.length > 0) ? null : <div className="text-center"><i className="fa fa-spinner fa-spin fa-2x fa-fw"></i></div>}
                             <div id="topic-evolution-chart" style={{'width': '100%'}}></div>
+                            <div ref="topicChart">
+                                <svg style={{"font": "10.5px Arial"}} id="chart" ref="chart" width="300" height="200"></svg>
+                            </div>
                         </div>
                     </div>
                 </div>

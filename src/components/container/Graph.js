@@ -108,7 +108,6 @@ class Graph extends Component {
 
   selectTopic(topic) {
     this.setState({
-      papers: [],
       selectedTopic: topic
     })
     this.getPapersData()
@@ -117,7 +116,9 @@ class Graph extends Component {
 
   backToTopicBubbles() {
     this.setState({
-      selectedTopic: ''
+      selectedTopic: '',
+      papers: [],
+      topicEvolution: []
     })
   }
 
