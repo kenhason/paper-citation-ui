@@ -83,7 +83,8 @@ export default class TopicEvolution extends Component {
         // Define the line
         var valueline = d3.svg.line()
             .x(function (d) { return x(d.year); })
-            .y(function (d) { return y(d.number); });
+            .y(function (d) { return y(d.number); })
+            .interpolate("cardinal");
 
         // Adds the svg canvas
         var svg = d3.select(this.refs.chart)

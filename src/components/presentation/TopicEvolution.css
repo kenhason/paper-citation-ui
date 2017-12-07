@@ -1,13 +1,16 @@
 path { 
-    stroke: steelblue;
-    stroke-width: 2;
+    stroke: rgb(253, 99, 129);
+    stroke-width: 3.5;
     fill: none;
 }
 
 .axis path,
 .axis line {
     fill: none;
-    stroke: grey;
+    stroke: rgb(146, 146, 146);
     stroke-width: 1;
     shape-rendering: crispEdges;
+}
+.axis text {
+    fill: rgb(102, 102, 102)
 }
