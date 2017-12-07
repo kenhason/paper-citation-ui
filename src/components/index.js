@@ -9,6 +9,7 @@ import CitationEvolution from './presentation/CitationEvolution'
 import UpdateTopic from './container/UpdateTopic'
 import TopicBubbles from './container/TopicBubbles'
 import TopicEvolution from './presentation/TopicEvolution'
+import TopicTrend from './presentation/TopicTrend'
 
 export {
     NavBar,
@@ -21,5 +22,6 @@ export {
     CitationEvolution,
     UpdateTopic,
     TopicBubbles,
-    TopicEvolution
+    TopicEvolution,
+    TopicTrend
 }

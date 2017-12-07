@@ -63,9 +63,9 @@ export default class TopicEvolution extends Component {
     drawLineChart() {
         d3.select(this.refs.chart).selectAll("*").remove()
 
-        var margin = { top: 30, right: 100, bottom: 30, left: 100 },
+        var margin = { top: 30, right: 20, bottom: 30, left: 60 },
             width = this.refs.topicChart.clientWidth - margin.left - margin.right,
-            height = 0.5*this.refs.topicChart.clientWidth - margin.top - margin.bottom;
+            height = 0.4*this.refs.topicChart.clientWidth - margin.top - margin.bottom;
 
         // Set the ranges
         var x = d3.scale.linear().range([0, width]);
@@ -78,6 +78,7 @@ export default class TopicEvolution extends Component {
             .tickFormat(d3.format('.0f'))
 
         var yAxis = d3.svg.axis().scale(y)
+            .ticks(5)
             .orient("left");
 
         // Define the line

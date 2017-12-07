@@ -17,6 +17,7 @@ class Graph extends Component {
       topics: [],
       papers: [],
       topicEvolution: [],
+      topicTrend: [],
       numOfClusters: 0,
       topicLabels1: [],
       topicLabels2: [],
@@ -28,6 +29,7 @@ class Graph extends Component {
     }
 
     this.getTopicsData()
+    this.getTopicTrend()
   }
 
   getTopicsData() {
@@ -102,6 +104,28 @@ class Graph extends Component {
       let data = res.results[0].data.map(function (data) { return {year: data.row[0], number: data.row[1]} })
       this.setState({
         topicEvolution: data
+      })
+    })
+  }
+
+  getTopicTrend() {
+    console.log("getting topic trend ...")
+    let body = {
+      "statements": [
+        {
+          "statement": "match (n: Paper) where n.year > 0 and n.topicLabel <> '' return n.year, n.topicLabel, count(*) as papers order by n.year asc, papers desc"
+        }
+      ]
+    };
+
+    APIManager.queryNeo4j(body, (err, res) => {
+      if (err) {
+        console.log(err)
+        return
+      }
+      let data = res.results[0].data.map(function (data) { return {year: data.row[0], topic: data.row[1], number: data.row[2]} })
+      this.setState({
+        topicTrend: data
       })
     })
   }
