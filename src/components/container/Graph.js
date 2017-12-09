@@ -123,10 +123,42 @@ class Graph extends Component {
         console.log(err)
         return
       }
+      
       let data = res.results[0].data.map(function (data) { return {year: data.row[0], topic: data.row[1], number: data.row[2]} })
+      // console.log(data)
+      // let topics = []
+      // data.forEach((row) => {
+      //   if (topics.indexOf(row.topic) === -1)
+      //     topics.push(row.topic)
+      // })
+      
+      // let years = []
+      // data.forEach((row) => {
+      //   if (years.indexOf(row.year) === -1)
+      //     years.push(row.year)
+      // })
+
+      // let trends = []
+      // years.forEach((year) => {
+      //   let trend = new Object()
+      //   trend['year'] = year
+      //   topics.forEach((topic) => {
+      //     trend[topic] = 0
+      //   })
+      //   trends.push(trend)
+      // })
+
+      // data.forEach((row) => {
+      //   trends.forEach((trend) => {
+      //     if (trend['year'] === row.year)
+      //       trend[row.topic] = row.number
+      //   })
+      // })
+
       this.setState({
         topicTrend: data
       })
+      console.log(this.state.topicTrend)
     })
   }
 
@@ -150,7 +182,7 @@ class Graph extends Component {
     return (
       <div className='graph-container' ref="graph">
         {(this.state.selectedTopic === '') 
-          ? <TopicBubbles topics={this.state.topics} onTopicSelected={this.selectTopic.bind(this)}/> 
+          ? <TopicBubbles topics={this.state.topics} trend={this.state.topicTrend} onTopicSelected={this.selectTopic.bind(this)}/> 
           : <ForceGraph topicEvolution={this.state.topicEvolution} papers={this.state.papers}  selectedTopic={this.state.selectedTopic} onClose={this.backToTopicBubbles.bind(this)} graph={this.state.graph} numOfClusters={this.state.numOfClusters} doneProcessing={this.state.doneProcessing} dimensions={this.state.dimensions}/>
         }   
       </div>

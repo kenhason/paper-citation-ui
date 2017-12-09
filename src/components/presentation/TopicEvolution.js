@@ -98,7 +98,7 @@ export default class TopicEvolution extends Component {
         var data = Object.assign([], this.props.chartData)
 
         // Scale the range of the data
-        x.domain(d3.extent(data, function (d) { return d.year; }));
+        x.domain([d3.min(data, function (d) { return d.year; }), d3.max(data, function (d) { return d.year; })]);
         y.domain([0, d3.max(data, function (d) { return d.number; })]);
 
         // Add the valueline path.
@@ -119,7 +119,7 @@ export default class TopicEvolution extends Component {
             .append("text")
             .attr("dy", "-0.71em")
             .attr("text-anchor", "end")
-            .text("# of papers");
+            .text("# papers");
     }
 
     render() {
