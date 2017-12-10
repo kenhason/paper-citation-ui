@@ -8,10 +8,13 @@ export default class CitationEvolution extends Component {
         super()
         this.drawChart = this.drawChart.bind(this)
         this.resizeChart = this.resizeChart.bind(this)
+        this.state = {
+            doneDisplay: false
+        }
     }
 
     componentDidUpdate() {
-        if (this.props.data !== null && this.props.data.length > 0 && this.props.modalReady) {
+        if (this.props.data.length > 0 && this.props.modalReady && this.state.doneDisplay === false) {
             this.drawChart()
             window.addEventListener('resize', this.resizeChart);
         }
@@ -22,6 +25,7 @@ export default class CitationEvolution extends Component {
     }
 
     resizeChart() {
+        console.log('resize chart')
         var maxNumber = d3.max(this.props.data, function(d) { return d.number; }),
         yearWidth = document.getElementsByClassName("year-label")[0].offsetWidth,
         rowWidth = document.getElementById("citation-evolution-chart").offsetWidth
@@ -50,15 +54,18 @@ export default class CitationEvolution extends Component {
         var bar = line.append("div").attr("class", "column");
         bar.text(function(d) { return d.number; });
         this.resizeChart()
+        this.setState({
+            doneDisplay: true
+        })
     }
 
     render() {
         return (
             <div>
-                {(this.props.data) ? null : <div className="text-center"><i className="fa fa-spinner fa-spin fa-2x fa-fw"></i></div>}
+                {(this.props.data.length > 0) ? null : <div className="text-center"><i className="fa fa-spinner fa-spin fa-2x fa-fw"></i></div>}
                 <div id="citation-evolution-chart" style={{'width': '100%'}}></div>
                 {
-                    (this.props.data && this.props.data.length > 0)
+                    (this.props.data.length > 0)
                         ?   (<div className="text-center mt-3 caption">
                                 <p id="figure-caption">Figure 1: Number of influenced papers over the years</p>
                             </div>)

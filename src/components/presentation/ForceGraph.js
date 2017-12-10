@@ -213,7 +213,9 @@ class ForceGraph extends Component {
     render() {
         return (
             <div>
-                <a className="graph-back-button text-center"><i onClick={this.backToTopicBubbles.bind(this)} className="fa fa-3x fa-arrow-left text-muted" aria-hidden="true"></i></a>
+                <a className="graph-back-button text-center">
+                    <i onClick={this.backToTopicBubbles.bind(this)} className="fa fa-3x fa-arrow-left text-muted"></i>
+                </a>
                 <button onClick={this.openTopicEvolution.bind(this)} type="button" className="topic-evolution-button btn btn-danger">Topic Evolution</button>
                 { (this.state.selectedPaper === -1) ? null: <PaperInfoWindow selectedPaper={this.state.selectedPaper} onClose={this.deselectPaper.bind(this)}/> }
                 { (this.props.papers.length > 0) ? null : <div className="keep-center"><i className="fa fa-cog fa-spin fa-3x fa-fw"></i></div>}

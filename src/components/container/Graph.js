@@ -158,7 +158,7 @@ class Graph extends Component {
       this.setState({
         topicTrend: data
       })
-      console.log(this.state.topicTrend)
+      // console.log(this.state.topicTrend)
     })
   }
 

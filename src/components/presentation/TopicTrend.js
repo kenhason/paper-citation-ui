@@ -5,7 +5,6 @@ import React, { Component } from 'react'
 export default class TopicTrend extends Component {
     constructor() {
         super()
-
         this.state = {
             modalReady: false
         }
