@@ -18,7 +18,9 @@ class PaperInfo extends Component {
             citingLevel: 1,
             citedLevel: 1,
             citingCount: -1,
-            citedCount: -1
+            citedCount: -1,
+            citingList: [],
+            citedList: []
         }
     }
 

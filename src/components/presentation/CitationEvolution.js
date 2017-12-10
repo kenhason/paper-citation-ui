@@ -35,7 +35,7 @@ export default class CitationEvolution extends Component {
                     .range([30, rowWidth - yearWidth]);
 
         d3.select("#citation-evolution-chart")
-        .selectAll(".column").style("width", function(d) { return x(d.number)+'px'; })
+        .selectAll(".column").style("width", function(d) { return x(d.number)-1+'px'; })
     }
 
     drawChart() {
