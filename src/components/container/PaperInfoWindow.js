@@ -1,6 +1,6 @@
 /*global $*/
 import React, { Component } from 'react'
-import { PaperDetails, CitationEvolution, CitingList, CitedList } from '../'
+import { PaperDetails, CitationEvolution, CitationSet } from '../'
 import APIManager from '../../utils/APIManager'
 
 class PaperInfo extends Component {
@@ -20,7 +20,9 @@ class PaperInfo extends Component {
             citingCount: -1,
             citedCount: -1,
             citingList: [],
-            citedList: []
+            citedList: [],
+            showCitingList: false,
+            showCitedList: false
         }
     }
 
@@ -147,6 +149,54 @@ class PaperInfo extends Component {
         })
     }
 
+    getCitingList() {
+        let body = {
+            "statements": [
+                {
+                    "statement": "match (a:Paper)-[r:CITES*1.."+this.state.citingLevel+"]->(b:Paper) where id(a)={id} return DISTINCT id(b), b.title",
+                    "parameters": {
+                        "id": this.props.selectedPaper
+                    }
+                }
+            ]
+        }
+        
+        APIManager.queryNeo4j(body, (err, res) => {
+            if (err) {
+              console.log(err)
+              return
+            }
+            let list = res.results[0].data.map((el) => { return {id: el.row[0], title: el.row[1]}})
+            this.setState({
+                citingList: list
+            })
+        })
+    }
+
+    getCitedList() {
+        let body = {
+            "statements": [
+                {
+                    "statement": "match (a:Paper)<-[r:CITES*1.."+this.state.citedLevel+"]-(b:Paper) where id(a)={id} return DISTINCT id(b), b.title",
+                    "parameters": {
+                        "id": this.props.selectedPaper
+                    }
+                }
+            ]
+        }
+        
+        APIManager.queryNeo4j(body, (err, res) => {
+            if (err) {
+              console.log(err)
+              return
+            }
+            let list = res.results[0].data.map((el) => { return {id: el.row[0], title: el.row[1]}})
+            this.setState({
+                citedList: list
+            })
+        })
+    }
+
     convertToBarChartJSON(res){
         var data=[];
         res.forEach(function(row){
@@ -169,9 +219,11 @@ class PaperInfo extends Component {
         if (current < 5) {
             this.setState({
                 citingLevel: current + 1,
-                citingCount: -1
+                citingCount: -1,
+                citingList: []
             }, () => {
                 this.getCitingCount()
+                this.hideCitingList()
             })        
         }
     }
@@ -181,9 +233,11 @@ class PaperInfo extends Component {
         if (current < 5) {
             this.setState({
                 citedLevel: current + 1,
-                citedCount: -1
+                citedCount: -1,
+                citedList: []
             }, () => {
                 this.getCitedCount()
+                this.hideCitedList()
             })
         }
     }
@@ -193,9 +247,11 @@ class PaperInfo extends Component {
         if (current > 1) {
             this.setState({
                 citingLevel: current - 1,
-                citingCount: -1
+                citingCount: -1,
+                citingList: []
             }, () => {
                 this.getCitingCount()
+                this.hideCitingList()
             })
         }
     }
@@ -205,13 +261,45 @@ class PaperInfo extends Component {
         if (current > 1) {
             this.setState({
                 citedLevel: current - 1,
-                citedCount: -1
+                citedCount: -1,
+                citedList: []
             }, () => {
                 this.getCitedCount()
+                this.hideCitedList()
             })
         }
     }
+
+    changeCitingListExistence() {
+        let current = this.state.showCitingList
+        this.setState({
+            showCitingList: !current
+        }, () => {
+            this.getCitingList()
+        })
+    }
     
+    changeCitedListExistence() {
+        let current = this.state.showCitedList
+        this.setState({
+            showCitedList: !current
+        }, () => {
+            this.getCitedList()
+        })
+    }
+
+    hideCitingList() {
+        this.setState({
+            showCitingList: false
+        })
+    }
+
+    hideCitedList() {
+        this.setState({
+            showCitedList: false
+        })
+    }
+
     render() {
         return(
             <div id="myModal" className="modal fade bd-example-modal-lg" tabIndex="-1" role="dialog">
@@ -230,19 +318,25 @@ class PaperInfo extends Component {
                             <CitationEvolution modalReady={this.state.modalReady} data={this.state.citationEvolution}/>
                             <hr/>
                             <h5 ref="chartContent"><strong>Citing Set</strong></h5>
-                            <CitingList 
+                            <CitationSet 
                                 count={this.state.citingCount} 
                                 level={this.state.citingLevel} 
                                 increaseLevel={this.increaseCitingLevel.bind(this)} 
-                                decreaseLevel={this.decreaseCitingLevel.bind(this)} 
+                                decreaseLevel={this.decreaseCitingLevel.bind(this)}
+                                showList={this.state.showCitingList} 
+                                changeListExistence={this.changeCitingListExistence.bind(this)}
+                                list={this.state.citingList}
                             />
                             <hr/>
                             <h5 ref="chartContent"><strong>Cited Set</strong></h5>
-                            <CitedList 
+                            <CitationSet 
                                 count={this.state.citedCount} 
                                 level={this.state.citedLevel}
                                 increaseLevel={this.increaseCitedLevel.bind(this)}
                                 decreaseLevel={this.decreaseCitedLevel.bind(this)}
+                                showList={this.state.showCitedList}
+                                changeListExistence={this.changeCitedListExistence.bind(this)}
+                                list={this.state.citedList}
                             />
                         </div>
                     </div>
