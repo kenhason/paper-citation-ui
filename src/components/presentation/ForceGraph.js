@@ -2,7 +2,7 @@
 // Tutorial: http://www.puzzlr.org/force-graphs-with-d3/
 import React, { Component } from 'react'
 import './ForceGraph.css'
-import { PaperInfoWindow, TopicEvolution } from '../'
+import { PaperInfoWindow, TopicEvolution, Search } from '../'
 
 class ForceGraph extends Component {
     constructor() {
@@ -183,6 +183,7 @@ class ForceGraph extends Component {
     }
 
     selectPaper(event) {
+        console.log(event)
         this.setState({
             selectedPaper: event.id
         })      
@@ -191,6 +192,13 @@ class ForceGraph extends Component {
     deselectPaper() {
         this.setState({
             selectedPaper: -1
+        })
+    }
+
+    selectPaperById(id) {
+        console.log(id)
+        this.setState({
+            selectedPaper: id
         })
     }
 
@@ -220,6 +228,7 @@ class ForceGraph extends Component {
                 { (this.state.selectedPaper === -1) ? null: <PaperInfoWindow selectedPaper={this.state.selectedPaper} onClose={this.deselectPaper.bind(this)}/> }
                 { (this.props.papers.length > 0) ? null : <div className="keep-center"><i className="fa fa-cog fa-spin fa-3x fa-fw"></i></div>}
                 { this.state.topicEvolution ? <TopicEvolution topic={this.props.selectedTopic} chartData={this.props.topicEvolution} onClose={this.closeTopicEvolution.bind(this)}/> : null }
+                <Search topic={this.props.selectedTopic} selectPaper={this.selectPaperById.bind(this)}/>
                 <svg ref="papers"
                     width={window.innerWidth} 
                     height={window.innerHeight}>

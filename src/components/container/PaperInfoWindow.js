@@ -313,9 +313,16 @@ class PaperInfo extends Component {
                         </div>
                         <div id="test"  className="modal-body">
                             <PaperDetails paper={this.state.paper}/>
-                            <hr/>
-                            <h5 ref="chartContent"><strong>Citation Evolution</strong></h5>
-                            <CitationEvolution modalReady={this.state.modalReady} data={this.state.citationEvolution}/>
+                            
+                            {
+                                (this.state.citationEvolution.length > 0)
+                                    ? <div>
+                                        <hr />
+                                        <h5 ref="chartContent"><strong>Citation Evolution</strong></h5>
+                                        <CitationEvolution modalReady={this.state.modalReady} data={this.state.citationEvolution} />
+                                    </div>
+                                    : null
+                            }
                             <hr/>
                             <h5 ref="chartContent"><strong>Citing Set</strong></h5>
                             <CitationSet 

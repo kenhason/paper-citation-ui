@@ -12,6 +12,7 @@ import TopicEvolution from './presentation/TopicEvolution'
 import TopicTrend from './presentation/TopicTrend'
 import CitationSet from './presentation/CitationSet'
 import CitationList from './presentation/CitationList'
+import Search from './container/Search'
 
 export {
     NavBar,
@@ -27,5 +28,6 @@ export {
     TopicEvolution,
     TopicTrend,
     CitationSet,
-    CitationList
+    CitationList,
+    Search
 }

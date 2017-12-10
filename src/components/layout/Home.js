@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Graph, UpdateTopic} from '../../components'
+import { Graph, UpdateTopic } from '../../components'
 import './Home.css'
 
 class Home extends Component {

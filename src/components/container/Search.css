@@ -1,0 +1,17 @@
+.search-container {
+    position: absolute;
+    top: 10px;
+    left: 65px;
+    -webkit-box-shadow: 0 0 2px 0 rgb(175, 173, 173);
+    -moz-box-shadow: 0 0 2px 0 rgb(175, 173, 173);
+    box-shadow: 0 0 2px 0 rgb(175, 173, 173);
+  }
+
+.scroll {
+    max-height: 90vh;
+    overflow-y: auto
+}
+
+.search-result-card {
+    cursor: pointer
+}

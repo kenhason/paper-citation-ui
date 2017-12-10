@@ -63,13 +63,13 @@ export default class CitationEvolution extends Component {
         return (
             <div>
                 {(this.props.data.length > 0) ? null : <div className="text-center"><i className="fa fa-spinner fa-spin fa-2x fa-fw"></i></div>}
-                <div id="citation-evolution-chart" style={{'width': '100%'}}></div>
+                <div id="citation-evolution-chart" style={{ 'width': '100%' }}></div>
                 {
                     (this.props.data.length > 0)
-                        ?   (<div className="text-center mt-3 caption">
-                                <p id="figure-caption">Figure 1: Number of influenced papers over the years</p>
-                            </div>)
-                        :   null
+                        ? (<div className="text-center mt-3 caption">
+                            <p id="figure-caption">Figure 1: Number of influenced papers over the years</p>
+                        </div>)
+                        : null
                 }
             </div>
         )

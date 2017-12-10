@@ -125,40 +125,10 @@ class Graph extends Component {
       }
       
       let data = res.results[0].data.map(function (data) { return {year: data.row[0], topic: data.row[1], number: data.row[2]} })
-      // console.log(data)
-      // let topics = []
-      // data.forEach((row) => {
-      //   if (topics.indexOf(row.topic) === -1)
-      //     topics.push(row.topic)
-      // })
-      
-      // let years = []
-      // data.forEach((row) => {
-      //   if (years.indexOf(row.year) === -1)
-      //     years.push(row.year)
-      // })
-
-      // let trends = []
-      // years.forEach((year) => {
-      //   let trend = new Object()
-      //   trend['year'] = year
-      //   topics.forEach((topic) => {
-      //     trend[topic] = 0
-      //   })
-      //   trends.push(trend)
-      // })
-
-      // data.forEach((row) => {
-      //   trends.forEach((trend) => {
-      //     if (trend['year'] === row.year)
-      //       trend[row.topic] = row.number
-      //   })
-      // })
 
       this.setState({
         topicTrend: data
       })
-      // console.log(this.state.topicTrend)
     })
   }
 
