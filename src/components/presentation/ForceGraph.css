@@ -54,10 +54,10 @@
 
 .buttons-container {
   top: 10px;
-  left: 70px;
+  left: 80px;
   position: absolute;
   border-radius: 3.5px;
-  -webkit-box-shadow: 0 0 10px 0 rgb(70, 68, 68);
-  -moz-box-shadow: 0 0 10px 0 rgb(70, 68, 68);
-  box-shadow: 0 0 10px 0 rgb(70, 68, 68);
+  -webkit-box-shadow: 0 0 3px 0 rgb(167, 167, 167);
+  -moz-box-shadow: 0 0 3px 0 rgb(167, 167, 167);
+  box-shadow: 0 0 3px 0 rgb(167, 167, 167);
 }

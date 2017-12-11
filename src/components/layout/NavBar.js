@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import "./NavBar.css"
 
 class NavBar extends Component {
-  openNav() {
+  openNav(e) {
+    e.preventDefault()
     this.refs.navButton.style.opacity = 0
     this.refs.nav.style.width = "250px"
   }
@@ -49,9 +50,17 @@ class NavBar extends Component {
           {this.props.showTopicTrendButton ? <a onClick={this.showTopicTrend.bind(this)}><i className="fa fa-line-chart fa-lg pr-3" aria-hidden="true"></i>Show Topic Trends</a> : null}
           <a onClick={this.showUpdateTopicLabel.bind(this)}><i className="fa fa-wrench fa-lg pr-3" aria-hidden="true"></i>Update Topic Label</a>
         </div>
-        <span ref="navButton" className="nav-button m-2" onClick={this.openNav.bind(this)}>
+        {/* <span ref="navButton" className="nav-button m-2" onClick={this.openNav.bind(this)}>
           <i className="fa fa-bars p-2" aria-hidden="true"></i>
-        </span>
+        </span> */}
+
+        <div ref="navButton" className="card nav-button p-0 m-0 b-0">
+          <div className="card-block p-1 m-0 b-0">
+              <button className="btn btn-secondary" onClick={this.openNav.bind(this)}>
+                <i className="fa fa-bars" aria-hidden="true"></i>
+              </button>
+          </div>
+        </div>
       </div>
     );
   }

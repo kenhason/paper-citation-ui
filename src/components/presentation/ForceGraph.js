@@ -224,14 +224,26 @@ class ForceGraph extends Component {
                 { (this.state.selectedPaper === -1) ? null: <PaperInfoWindow selectedPaper={this.state.selectedPaper} onClose={this.deselectPaper.bind(this)}/> }
                 { (this.props.papers.length > 0) ? null : <div className="keep-center"><i className="fa fa-cog fa-spin fa-3x fa-fw"></i></div>}
                 { this.state.topicEvolution ? <TopicEvolution topic={this.props.selectedTopic} chartData={this.props.topicEvolution} onClose={this.closeTopicEvolution.bind(this)}/> : null }
-                <div className="btn-group buttons-container">
+                {/* <div className="btn-group buttons-container">
                     <button type="button" className="btn btn-danger" onClick={this.backToTopicBubbles.bind(this)}><i className="fa fa-lg fa-arrow-left text-white"></i></button>
                     <span className="input-group-addon"><strong>{this.props.selectedTopic}</strong></span>
                     <button onClick={this.openTopicEvolution.bind(this)} type="button" className="btn btn-danger">Evolution Chart</button>
+                </div> */}
+
+                <div className="card bg-faded buttons-container p-0 m-0 b-0">
+                    <div className="card-block p-1 m-0 b-0">
+                        <div className="btn-group">
+                            <button type="button" className="btn btn-danger" onClick={this.backToTopicBubbles.bind(this)}><i className="fa fa-lg fa-arrow-left text-white"></i></button>
+                            <span className="input-group-addon"><strong>{this.props.selectedTopic}</strong></span>
+                            <button onClick={this.openTopicEvolution.bind(this)} type="button" className="btn btn-danger">Evolution Chart</button>
+                        </div>
+                    </div>
+
                 </div>
+
                 <Search topic={this.props.selectedTopic} selectPaper={this.selectPaperById.bind(this)} />
                 <svg ref="papers"
-                    width={window.innerWidth} 
+                    width={window.innerWidth}
                     height={window.innerHeight}>
                 </svg>
             </div>

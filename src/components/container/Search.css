@@ -2,18 +2,22 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    width: 300px;
+    width: 400px;
     border-radius: 3.5px;
-    -webkit-box-shadow: 0 0 10px 0 rgb(70, 68, 68);
-    -moz-box-shadow: 0 0 10px 0 rgb(70, 68, 68);
-    box-shadow: 0 0 10px 0 rgb(70, 68, 68);
+    -webkit-box-shadow: 0 0 3px 0 rgb(167, 167, 167);
+    -moz-box-shadow: 0 0 3px 0 rgb(167, 167, 167);
+    box-shadow: 0 0 3px 0 rgb(167, 167, 167);
 }
 
 .scroll {
     max-height: 90vh;
-    overflow-y: auto
+    overflow-y: auto;
 }
 
 .search-result-card {
-    cursor: pointer
+    cursor: pointer;
+}
+
+li:hover{
+    background-color: rgb(219, 218, 218);
 }
