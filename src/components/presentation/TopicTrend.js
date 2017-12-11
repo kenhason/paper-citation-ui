@@ -76,6 +76,7 @@ export default class TopicTrend extends Component {
             .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
+        var legend = d3.select(this.refs.legend)
         var data = this.state.data
 
         // Scale the range of the data
@@ -87,7 +88,7 @@ export default class TopicTrend extends Component {
             .key(function (d) { return d.topic; })
             .entries(data);
             
-        var color = d3.scale.category10();   // set the colour scale
+        var color = d3.scale.category20();   // set the colour scale
 
         var legendSpace = width / dataNest.length; // spacing for legend
 
@@ -102,15 +103,14 @@ export default class TopicTrend extends Component {
                 .attr("d", priceline(d.values));
 
             // Add the Legend
-            svg.append("text")
-                .attr("x", (legendSpace / 2) + i * legendSpace) // spacing
-                .attr("y", height + (margin.bottom / 2) + 5)
-                .attr("class", "legend")    // style the legend
-                .style("fill", function () { // dynamic colours
+            legend.append("a")
+                // .attr("x", (legendSpace / 2) + i * legendSpace) // spacing
+                // .attr("y", height + (margin.bottom / 2) + 5)
+                .attr("class", "col-7")    // style the legend
+                .style("color", function () { // dynamic colours
                     return d.color = color(d.key);
                 })
                 .text(d.key);
-
         });
 
         // Add the X Axis
@@ -141,6 +141,7 @@ export default class TopicTrend extends Component {
                                 { (this.state.data.length > 0) 
                                     ?   <div id="chart-line-1" ref="topicChart">
                                             <svg style={{ "font": "10.5px Arial" }} ref="chart" width="300" height="200"></svg>
+                                            <div ref="legend"></div>
                                         </div>
                                     :   <div className="text-center">
                                             <i className="fa fa-cog fa-spin fa-3x fa-fw"></i>
