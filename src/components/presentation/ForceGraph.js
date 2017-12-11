@@ -221,14 +221,15 @@ class ForceGraph extends Component {
     render() {
         return (
             <div>
-                <a className="graph-back-button text-center">
-                    <i onClick={this.backToTopicBubbles.bind(this)} className="fa fa-3x fa-arrow-left text-muted"></i>
-                </a>
-                <button onClick={this.openTopicEvolution.bind(this)} type="button" className="topic-evolution-button btn btn-danger">Topic Evolution</button>
                 { (this.state.selectedPaper === -1) ? null: <PaperInfoWindow selectedPaper={this.state.selectedPaper} onClose={this.deselectPaper.bind(this)}/> }
                 { (this.props.papers.length > 0) ? null : <div className="keep-center"><i className="fa fa-cog fa-spin fa-3x fa-fw"></i></div>}
                 { this.state.topicEvolution ? <TopicEvolution topic={this.props.selectedTopic} chartData={this.props.topicEvolution} onClose={this.closeTopicEvolution.bind(this)}/> : null }
-                <Search topic={this.props.selectedTopic} selectPaper={this.selectPaperById.bind(this)}/>
+                <div className="btn-group buttons-container">
+                    <button type="button" className="btn btn-danger" onClick={this.backToTopicBubbles.bind(this)}><i className="fa fa-lg fa-arrow-left text-white"></i></button>
+                    <span className="input-group-addon"><strong>{this.props.selectedTopic}</strong></span>
+                    <button onClick={this.openTopicEvolution.bind(this)} type="button" className="btn btn-danger">Evolution Chart</button>
+                </div>
+                <Search topic={this.props.selectedTopic} selectPaper={this.selectPaperById.bind(this)} />
                 <svg ref="papers"
                     width={window.innerWidth} 
                     height={window.innerHeight}>

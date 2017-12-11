@@ -7,8 +7,7 @@ export default class TopicBubbles extends Component {
     constructor() {
         super()
         this.state = {
-            doneVisualized: false,
-            showTopicTrend: false
+            doneVisualized: false
         }
     }
 
@@ -178,24 +177,10 @@ export default class TopicBubbles extends Component {
         this.props.onTopicSelected(event.topic)
     }
 
-    closeTopicTrend() {
-        this.setState({
-            showTopicTrend: false
-        })
-    }
-
-    openTopicTrend() {
-        this.setState({
-            showTopicTrend: true
-        })
-    }
-
     render() {
         return(
             <div>
                 { (this.props.topics.length > 0) ? null : <div className="keep-center"><i className="fa fa-cog fa-spin fa-3x fa-fw"></i></div>}
-                <button onClick={this.openTopicTrend.bind(this)} type="button" className="topic-evolution-button btn btn-danger">Topic Trend</button> 
-                { this.state.showTopicTrend ? <TopicTrend data={this.props.trend} onClose={this.closeTopicTrend.bind(this)}/> : null }
                 <svg ref={node => this.node = node}
                     width={window.innerWidth} 
                     height={window.innerHeight}>

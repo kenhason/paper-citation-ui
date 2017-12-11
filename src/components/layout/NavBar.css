@@ -1,0 +1,62 @@
+.nav-button {
+    font-size:20px;
+    color: rgb(71, 70, 70);
+    cursor:pointer;
+    position: absolute;
+    background-color: rgb(233, 232, 232);
+    border-radius: 4px;
+    z-index: 1;
+    -webkit-box-shadow: 0 0 10px 0 rgb(70, 68, 68);
+    -moz-box-shadow: 0 0 10px 0 rgb(70, 68, 68);
+    box-shadow: 0 0 10px 0 rgb(70, 68, 68);
+}
+
+.back-button {
+    cursor: pointer;
+}
+.back-button a:hover {
+    background-color: rgb(150, 148, 148);
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(109, 109, 109);
+    overflow-x: hidden;
+    transition: 0.2s;
+    -webkit-box-shadow: 0 0 5px 0 rgb(175, 173, 173);
+    -moz-box-shadow: 0 0 5px 0 rgb(175, 173, 173);
+    box-shadow: 0 0 5px 0 rgb(175, 173, 173);
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: rgb(16, 16, 16);
+    display: block;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.sidenav a:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 20px;
+    margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}

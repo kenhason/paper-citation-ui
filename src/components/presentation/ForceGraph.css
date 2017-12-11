@@ -44,3 +44,20 @@
   -moz-box-shadow: 0 0 12px rgb(100, 100, 100);
   box-shadow: 0 0 12px rgb(100, 100, 100);
 }
+
+.paper-toolbar-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-block;
+}
+
+.buttons-container {
+  top: 10px;
+  left: 70px;
+  position: absolute;
+  border-radius: 3.5px;
+  -webkit-box-shadow: 0 0 10px 0 rgb(70, 68, 68);
+  -moz-box-shadow: 0 0 10px 0 rgb(70, 68, 68);
+  box-shadow: 0 0 10px 0 rgb(70, 68, 68);
+}

@@ -1,11 +1,13 @@
 .search-container {
     position: absolute;
     top: 10px;
-    left: 65px;
-    -webkit-box-shadow: 0 0 2px 0 rgb(175, 173, 173);
-    -moz-box-shadow: 0 0 2px 0 rgb(175, 173, 173);
-    box-shadow: 0 0 2px 0 rgb(175, 173, 173);
-  }
+    right: 10px;
+    width: 300px;
+    border-radius: 3.5px;
+    -webkit-box-shadow: 0 0 10px 0 rgb(70, 68, 68);
+    -moz-box-shadow: 0 0 10px 0 rgb(70, 68, 68);
+    box-shadow: 0 0 10px 0 rgb(70, 68, 68);
+}
 
 .scroll {
     max-height: 90vh;

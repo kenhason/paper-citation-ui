@@ -1,12 +1,13 @@
 /*global d3 $*/
 // Reference: http://bl.ocks.org/d3noob/7cd5a74c4620db72f43f
 import React, { Component } from 'react'
+import APIManager from '../../utils/APIManager'
 
 export default class TopicTrend extends Component {
     constructor() {
         super()
         this.state = {
-            modalReady: false
+            data: []
         }
     }
     componentDidMount() {
@@ -15,17 +16,34 @@ export default class TopicTrend extends Component {
         }.bind(this))
 
         $('#topicTrend').on('shown.bs.modal', function (e) {
-            this.setState({
-                modalReady: true
-            })
+            this.getTopicTrend()
         }.bind(this))
         
         $('#topicTrend').modal('show')  
     }
 
-    componentDidUpdate() {
-        if (this.props.data.length > 0 && this.state.modalReady === true)
-            this.visualizeChart()
+    getTopicTrend() {
+        console.log("getting topic trend ...")
+        let body = {
+            "statements": [
+                {
+                    "statement": "match (n: Paper) where n.year > 0 and n.topicLabel <> '' return n.year, n.topicLabel, count(*) as papers order by n.year asc, papers desc"
+                }
+            ]
+        };
+
+        APIManager.queryNeo4j(body, (err, res) => {
+            if (err) {
+                console.log(err)
+                return
+            }
+
+            let data = res.results[0].data.map(function (data) { return { year: data.row[0], topic: data.row[1], number: data.row[2] } })
+
+            this.setState({
+                data: data
+            }, () => this.visualizeChart())
+        })
     }
 
     visualizeChart() {
@@ -58,7 +76,7 @@ export default class TopicTrend extends Component {
             .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-        var data = this.props.data
+        var data = this.state.data
 
         // Scale the range of the data
         x.domain([d3.min(data, function (d) { return d.year; }), d3.max(data, function (d) { return d.year; })]);
@@ -120,7 +138,7 @@ export default class TopicTrend extends Component {
                         </div>
                         <div className="modal-body">
                             <div ref="container" className="text-center">
-                                { (this.props.data.length > 0) 
+                                { (this.state.data.length > 0) 
                                     ?   <div id="chart-line-1" ref="topicChart">
                                             <svg style={{ "font": "10.5px Arial" }} ref="chart" width="300" height="200"></svg>
                                         </div>

@@ -70,8 +70,8 @@ export default class Search extends Component {
             )
         })
         return (
-            <div className="card bg-faded col-4 search-container p-0">
-                <div className="card-block px-1 py-1">
+            <div className="card bg-faded search-container p-0 m-0 b-0">
+                <div className="card-block p-1 m-0 b-0">
                     <div className="input-group card-title m-0">
                         <input type="text" className="form-control" placeholder="Search for..." onChange={this.updateKeyword.bind(this)} />
                         <span className="input-group-btn">

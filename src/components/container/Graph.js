@@ -150,7 +150,7 @@ class Graph extends Component {
 
   render() {
     return (
-      <div className='graph-container' ref="graph">
+      <div className='graph-container bg-faded' ref="graph">
         {(this.state.selectedTopic === '') 
           ? <TopicBubbles topics={this.state.topics} trend={this.state.topicTrend} onTopicSelected={this.selectTopic.bind(this)}/> 
           : <ForceGraph topicEvolution={this.state.topicEvolution} papers={this.state.papers}  selectedTopic={this.state.selectedTopic} onClose={this.backToTopicBubbles.bind(this)} graph={this.state.graph} numOfClusters={this.state.numOfClusters} doneProcessing={this.state.doneProcessing} dimensions={this.state.dimensions}/>
