@@ -1,7 +1,6 @@
 /*global d3 $*/
 import React, { Component } from 'react'
 import './TopicEvolution.css'
-import APIManager from '../../utils/APIManager'
 
 export default class TopicEvolution extends Component {
     constructor() {

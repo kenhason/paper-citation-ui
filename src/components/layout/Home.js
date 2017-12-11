@@ -56,7 +56,6 @@ class Home extends Component {
     return (
       <div className="hidden-scrolls">
         <NavBar
-          showTopicTrendButton={this.state.showNetwork}
           showTopicTrend={this.showTopicTrend.bind(this)}
           goToHome={this.goToHome.bind(this)} 
           goToNetwork={this.goToNetwork.bind(this)}

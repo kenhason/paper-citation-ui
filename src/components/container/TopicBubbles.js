@@ -1,7 +1,6 @@
 /*global d3*/
 import React, { Component } from 'react'
 import './TopicBubbles.css'
-import { TopicTrend } from '../'
 
 export default class TopicBubbles extends Component {
     constructor() {
