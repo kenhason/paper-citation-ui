@@ -14,8 +14,8 @@ export default class Index extends Component {
                                 <div className="card-block bg-faded">
                                     <h4 className="card-title"><strong>Objectives</strong></h4>
                                     <ul className="text-muted">
-                                        <li>Find scientific papers quickly and accurately</li>
-                                        <li>Explore topic trends</li>
+                                        <li>Display citation network in the way that increases user’s cognition and comprehension about the network and its related information.</li>
+                                        <li>Show how topics of scientific paper influence or being influenced within the network.</li>
                                     </ul>
                                 </div>
                             </div>
