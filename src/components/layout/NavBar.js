@@ -47,7 +47,7 @@ class NavBar extends Component {
           <hr className="mt-0"/>
           <a onClick={this.goToHome.bind(this)}><i className="fa fa-home fa-lg pr-3" aria-hidden="true"></i> Home</a>
           <a onClick={this.goToNetwork.bind(this)}><i className="fa fa-globe fa-lg pr-3" aria-hidden="true"></i> Network</a>
-          <a onClick={this.showTopicTrend.bind(this)}><i className="fa fa-line-chart fa-lg pr-3" aria-hidden="true"></i>Show Topic Trends</a>
+          <a onClick={this.showTopicTrend.bind(this)}><i className="fa fa-line-chart fa-lg pr-3" aria-hidden="true"></i>Topic Trends</a>
           <a onClick={this.showUpdateTopicLabel.bind(this)}><i className="fa fa-wrench fa-lg pr-3" aria-hidden="true"></i>Update Topic Label</a>
         </div>
         {/* <span ref="navButton" className="nav-button m-2" onClick={this.openNav.bind(this)}>

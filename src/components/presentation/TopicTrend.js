@@ -48,7 +48,7 @@ export default class TopicTrend extends Component {
 
     visualizeChart() {
         // Set the dimensions of the canvas / graph
-        var margin = { top: 30, right: 20, bottom: 70, left: 50 },
+        var margin = { top: 30, right: 20, bottom: 30, left: 50 },
             width = this.refs.container.clientWidth - margin.left - margin.right,
             height = 0.5*this.refs.container.clientWidth - margin.top - margin.bottom;
 
@@ -90,8 +90,6 @@ export default class TopicTrend extends Component {
             
         var color = d3.scale.category20();   // set the colour scale
 
-        var legendSpace = width / dataNest.length; // spacing for legend
-
         // Loop through each symbol / key
         dataNest.forEach(function (d, i) {
 
@@ -104,12 +102,11 @@ export default class TopicTrend extends Component {
 
             // Add the Legend
             legend.append("a")
-                // .attr("x", (legendSpace / 2) + i * legendSpace) // spacing
-                // .attr("y", height + (margin.bottom / 2) + 5)
                 .attr("class", "col-7")    // style the legend
                 .style("color", function () { // dynamic colours
                     return d.color = color(d.key);
                 })
+                .style("font-weight", "bold")
                 .text(d.key);
         });
 
@@ -122,7 +119,11 @@ export default class TopicTrend extends Component {
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
-            .call(yAxis);
+            .call(yAxis)
+            .append("text")
+            .attr("dy", "-0.71em")
+            .attr("text-anchor", "end")
+            .text("# papers");;
     }
 
     render() {
@@ -131,21 +132,25 @@ export default class TopicTrend extends Component {
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">Topic Trend</h5>
+                            <h5 className="modal-title"><strong>Trends</strong> for all topics in Citation Network</h5>
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div className="modal-body">
                             <div ref="container" className="text-center">
-                                { (this.state.data.length > 0) 
-                                    ?   <div id="chart-line-1" ref="topicChart">
-                                            <svg style={{ "font": "10.5px Arial" }} ref="chart" width="300" height="200"></svg>
-                                            <div ref="legend"></div>
-                                        </div>
-                                    :   <div className="text-center">
-                                            <i className="fa fa-cog fa-spin fa-3x fa-fw"></i>
-                                        </div>
+                                {(this.state.data.length > 0)
+                                    ? <div id="chart-line-1" ref="topicChart">
+                                        <svg style={{ "font": "10.5px Arial" }} ref="chart" width="300" height="200"></svg>
+                                        <div ref="legend"></div>
+                                        <hr/>
+                                        <p className="text-center text-muted mt-3 mb-0">
+                                            <small><em>The chart shows the number papers in different topics for each year. It provides <strong>trending idea</strong>: what are <strong>top favored</strong> topics</em></small>
+                                        </p>
+                                    </div>
+                                    : <div className="text-center">
+                                        <i className="fa fa-cog fa-spin fa-3x fa-fw"></i>
+                                    </div>
                                 }
                             </div>
                         </div>

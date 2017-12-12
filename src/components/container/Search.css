@@ -18,6 +18,6 @@
     cursor: pointer;
 }
 
-li:hover{
+.list-group li:hover{
     background-color: rgb(219, 218, 218);
 }

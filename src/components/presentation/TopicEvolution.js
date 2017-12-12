@@ -128,7 +128,7 @@ export default class TopicEvolution extends Component {
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title">{this.props.topic}</h5>
+                            <h5 className="modal-title">Topic Evolution: <strong>{this.props.topic}</strong></h5>
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
@@ -138,6 +138,9 @@ export default class TopicEvolution extends Component {
                             <div id="topic-evolution-chart" style={{'width': '100%'}}></div>
                             <div ref="topicChart">
                                 <svg style={{"font": "10.5px Arial"}} id="chart" ref="chart" width="300" height="200"></svg>
+                                <p className="text-center text-muted mt-3 mb-0">
+                                    <small><em>Number papers in <strong>{this.props.topic}</strong> category by year</em></small>
+                                </p>
                             </div>
                         </div>
                     </div>
