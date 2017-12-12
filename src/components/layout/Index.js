@@ -25,7 +25,7 @@ export default class Index extends Component {
                                     <div className="row">
                                         <div className="col-4">
                                             <div className="card">
-                                                <img className="card-img-top" style={{width: '100%', height: 'auto'}} src="img/phuc.jpeg" alt="Card image cap"/>
+                                                <img className="card-img-top" style={{width: '100%', height: 'auto'}} src="img/phuc.jpeg" alt="Card cap"/>
                                                     <div className="card-block">
                                                         <h4 className="card-title"><strong>Prof. Phuc Do</strong></h4>
                                                         <a className="card-text text-muted">Advisor</a><br/>
@@ -35,7 +35,7 @@ export default class Index extends Component {
                                         </div>
                                         <div className="col-4">
                                             <div className="card">
-                                                <img className="card-img-top" style={{width: '100%', height: 'auto'}}  src="img/kiet.png" alt="Card image cap"/>
+                                                <img className="card-img-top" style={{width: '100%', height: 'auto'}}  src="img/kiet.png" alt="Card cap"/>
                                                     <div className="card-block">
                                                         <h4 className="card-title"><strong>Kiet Huynh</strong></h4>
                                                         <a className="card-text text-muted">Undergraduate</a><br/>
@@ -45,7 +45,7 @@ export default class Index extends Component {
                                         </div>
                                         <div className="col-4">
                                             <div className="card">
-                                                <img className="card-img-top" style={{width: '100%', height:'auto'}}  src="img/huy.jpg" alt="Card image cap"/>
+                                                <img className="card-img-top" style={{width: '100%', height:'auto'}}  src="img/huy.jpg" alt="Card cap"/>
                                                     <div className="card-block">
                                                         <h4 className="card-title"><strong>Huy Le</strong></h4>
                                                         <a className="card-text text-muted">Undergraduate</a><br/>
