@@ -28,7 +28,7 @@ export default class Index extends Component {
                                                 <img className="card-img-top" style={{width: '100%', height: 'auto'}} src="img/phuc.jpeg" alt="Card cap"/>
                                                     <div className="card-block">
                                                         <h4 className="card-title"><strong>Prof. Phuc Do</strong></h4>
-                                                        <a className="card-text text-muted">Advisor</a><br/>
+                                                        <a className="card-text text-muted">Thesis Advisor</a><br/>
                                                         <a className="card-text text-muted">phucdo@uit.edu.vn</a>
                                                     </div>
                                             </div>
